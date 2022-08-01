@@ -1,0 +1,77 @@
+@startuml
+
+class Connect4{
+    - boardView
+    - yesNoDialog
+    + playGame()
+}
+class YesNoDialogView{
+    + read(message)
+    + isAffirmative()
+}
+class Board{
+    - MAX_ROWS
+    - MAX_COLUMNS
+    - tokens[]
+    + fillEmptyHoles()
+    + isHole(token)
+    + putToken(token)
+    + isEndGame()
+    + isFullBoard()
+    - isInLine(token)
+}
+class BoardView{
+    - Board
+    - TurnView
+    + init()
+    + show()
+}
+class Coordinate{
+    - row
+    - column
+    + isOnRange()
+}
+class Token{
+    - Color
+    - Coordinate
+    + getColor()
+    + isHole()
+}
+class TurnView{
+    - turn
+    + nextTurn()
+    + getToken()
+    + getColor()
+}
+
+class Turn{
+    - currentColor
+    + nextTurn()
+    + getToken()
+    + getColor()
+    
+}
+
+class Result
+
+enum Colors{
+Red
+Yellow
+}
+
+Connect4 ..> BoardView
+Connect4 ..> YesNoDialogView
+
+BoardView ..> Board
+BoardView ..> TurnView
+TurnView o--> Turn
+Board --> "hace falta result?" Result
+
+Board o--> Token
+
+Turn ..> Token
+
+
+Token *--> Colors
+Token ..> Coordinate
+@enduml

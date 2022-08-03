@@ -18,17 +18,19 @@ function connect4() {
 
 function boardView() {
     return {
+        MAX_ROWS: 7,
+        MAX_COLUMNS:  9, 
         board: board(),
         turnView: turnView(),
         init: function () {
             const MAX_ROWS = 7;
             const MAX_COLUMNS =  9;
             console.writeln("Connect4 title");
-            this.board.fillEmptyTokens(MAX_ROWS, MAX_COLUMNS);//todo howto in board constructor
+            this.board.fillEmptyTokens(this.MAX_ROWS, this.MAX_COLUMNS);//todo howto in board constructor
             do {
                 this.show();
                 do {
-                    token = this.turnView.getToken(MAX_ROWS, MAX_COLUMNS);
+                    token = this.turnView.getToken(this.MAX_ROWS, this.MAX_COLUMNS);
                 } while (!this.board.isHole(token));
                 this.board.putToken(token);
                 this.turnView.nextTurn();
@@ -49,7 +51,7 @@ function boardView() {
                 if (hole === true) {
                     console.write(" o ");
                 }
-                if (tokens[i].getColumn() === this.Board.getMaxColumns){
+                if (tokens[i].getColumn() === this.MAX_COLUMNS){
                     console.writeln("");
                 }
             }
@@ -114,9 +116,9 @@ function turnView() {
 
 function turn(){
     return{
-        currentColor: color.Red,
+        color: color.Red,
         getColor: function (){
-            return this.currentColor;
+            return this.color;
         }
     }
 }

@@ -105,7 +105,7 @@ function turnView() {
             
             let column = console.readString("Insert column: ");
             let coordinate = coordinate(row, column);
-            return token(color, coordinate); //todo relación con token con la vista?¿
+            return token(color, coordinate);
         }
     }
 }

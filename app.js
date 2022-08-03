@@ -127,6 +127,9 @@ function turn(){
         color: color.Red,
         getColor: function (){
             return this.color;
+        },
+        nextTurn: function (){
+            //todo
         }
     }
 }

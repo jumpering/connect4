@@ -35,7 +35,7 @@ function boardView() {
                 this.board.putToken(token);
                 this.turnView.nextTurn();
             } while (this.board.isEndGame());
-            this.board.isFullBoard() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
+            this.board.isComplete() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
         },
         show: function () {
             let tokens = this.board.getTokens();
@@ -85,7 +85,17 @@ function board() {
             return this.tokens;
         },
         isEndGame: function (){
-
+            //todo 
+        },
+        isComplete: function (){
+            const TOTAL_HOLES = 63;
+            let counter = 0;
+            for (let i= 0; i < this.tokens.length(); i++){
+                if(!this.tokens[i].isHole()){
+                    counter++;
+                }
+            }
+            return counter === TOTAL_HOLES;
         }
     }
 }
@@ -152,7 +162,7 @@ function token(color, coordinate){
     }
 }
 
-function color(){ //todo how to make enum?
+function color(){ //todo howto make enum?
     Red,
     Yellow
 }

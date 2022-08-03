@@ -88,7 +88,7 @@ function board() {
             //todo 
         },
         isComplete: function (){
-            const TOTAL_HOLES = 63;
+            const TOTAL_HOLES = 63; //todo must be MAX_ROWS * MAX_COLUMNS
             let counter = 0;
             for (let i= 0; i < this.tokens.length(); i++){
                 if(!this.tokens[i].isHole()){

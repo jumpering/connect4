@@ -58,17 +58,16 @@ function boardView() {
 function board() {
     const MAX_ROWS = 7;
     const MAX_COLUMNS = 9;
-    //let tokens = [];
     return {
+        tokens: [],
         tokens: this.fillEmptyTokens(),
         fillEmptyTokens: function () {
-            console.writeln("inner function");
             let tokens = [];
             for (let i = 0; i < MAX_ROWS; i++) {
                 for (let j = 0; j < MAX_COLUMNS; j++) {
-                    let coordinate = coordinate(i, j);
-                    let token = token(coordinate);
-                    tokens.push(token);
+                    let coordinateA = coordinate(i, j);
+                    let tokenA = token(coordinate);
+                    tokens.push(tokenA);
                 }
             }
             return tokens;
@@ -84,6 +83,9 @@ function board() {
         },
         getMaxColumns: function (){
             return this.MAX_COLUMNS;
+        },
+        getTokens: function (){
+            return this.tokens;
         }
     }
 }
@@ -92,13 +94,56 @@ function turnView() {//todo necesita max_rows y max_columns para limitar el getT
     return{
         turn: turn(),
         getToken: function (){
-            const color = this.turn.getColor;
+            let color = this.turn.getColor;
             let row = console.readString("Insert row: ");
             let column = console.readString("Insert column: ");
             let coordinate = coordinate(row, column);
             return token(color, coordinate); //todo relación con token con la vista?¿
         }
     }
+}
+
+function turn(){
+    return{
+        currentColor: color.Red,
+        getColor: function (){
+            return this.currentColor;
+        }
+    }
+}
+
+function coordinate(row, column){
+    return{
+        row: row,
+        column: column,
+    }
+}
+
+function token(color, coordinate){
+    return{
+        coordinate: coordinate,
+        color: color,
+        hole: true,
+
+        setColor: function (color){
+            this.color = color;
+        },
+        getColor: function (){
+            return this.color;
+        },
+        isHole: function (){
+            return this.hole;
+        },
+        setHole: function (boolean){
+            this.hole = boolean;
+        }
+        
+    }
+}
+
+function color(){ //todo how to make enum?
+    Red,
+    Yellow
 }
 
 function yesNoDialog() {

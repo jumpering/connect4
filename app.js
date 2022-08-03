@@ -33,7 +33,7 @@ function boardView() {
                 this.board.putToken(token);
                 this.turnView.nextTurn();
             } while (this.board.isEndGame());
-            this.board().isFullBoard() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
+            this.board.isFullBoard() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
         },
         show: function () {
             let tokens = this.board.getTokens();
@@ -81,6 +81,9 @@ function board() {
         },
         getTokens: function (){
             return this.tokens;
+        },
+        isEndGame: function (){
+
         }
     }
 }
@@ -90,24 +93,21 @@ function turnView() {
         turn: turn(),
         getToken: function (maxRows, maxColumns){
             let color = this.turn.getColor;
-            let row = 0;
-            const errorRow = row < 0 && row > maxRows;
-            do{
-                row = console.readString("Insert row: ");
-                if (errorRow){
-                    console.writeln("Insert value between 0 and " + maxRows);
-                }
-            }while (errorRow);
-            let column = 0;
-            const errorColumn = column < 0 && column > maxColumns;
-            do{
-                column = console.readString("Insert column: ");
-                if (errorColumn){
-                    console.writeln("Insert value between 0 and " + maxColumns);
-                }
-            }while (errorColumn);
+            let row = this.getValidValue("row", maxRows);
+            let column = this.getValidValue("column", maxColumns);
             let coordinate = coordinate(row, column);
             return token(color, coordinate);
+        },
+        getValidValue: function (name, maxValue){
+            let value = 0;
+            const error = value < 0 && value > maxValue;
+            do{
+                value = console.readString("Insert " + name + ": ");
+                if (error){
+                    console.writeln("Insert value between 0 and " + maxValue);
+                }
+            }while (error);
+            return value;
         }
     }
 }

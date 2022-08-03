@@ -21,12 +21,14 @@ function boardView() {
         board: board(),
         turnView: turnView(),
         init: function () {
+            const MAX_ROWS = 7;
+            const MAX_COLUMNS =  9;
             console.writeln("Connect4 title");
+            this.board.fillEmptyTokens(MAX_ROWS, MAX_COLUMNS);//todo howto in board constructor
             do {
                 this.show();
-                token = "";
                 do {
-                    token = this.turnView.getToken();
+                    token = this.turnView.getToken(MAX_ROWS, MAX_COLUMNS);
                 } while (!this.board.isHole(token));
                 this.board.putToken(token);
                 this.turnView.nextTurn();
@@ -56,21 +58,17 @@ function boardView() {
 }
 
 function board() {
-    const MAX_ROWS = 7;
-    const MAX_COLUMNS = 9;
     return {
         tokens: [],
-        tokens: this.fillEmptyTokens(),
-        fillEmptyTokens: function () {
-            let tokens = [];
-            for (let i = 0; i < MAX_ROWS; i++) {
-                for (let j = 0; j < MAX_COLUMNS; j++) {
-                    let coordinateA = coordinate(i, j);
-                    let tokenA = token(coordinate);
-                    tokens.push(tokenA);
+        fillEmptyTokens: function (maxRows, maxColumns) {
+            for (let i = 0; i < maxRows; i++) {
+                for (let j = 0; j < maxColumns; j++) {
+                    let coordinate = coordinate(i, j);
+                    let token = token(coordinate);
+                    this.tokens.push(token);
                 }
             }
-            return tokens;
+            return this.tokens;
         },
         isHole: function (token) {
             tokenHole = false;
@@ -90,12 +88,21 @@ function board() {
     }
 }
 
-function turnView() {//todo necesita max_rows y max_columns para limitar el getToken
+function turnView() {
     return{
         turn: turn(),
-        getToken: function (){
+        getToken: function (maxRows, maxColumns){
             let color = this.turn.getColor;
-            let row = console.readString("Insert row: ");
+            let row = 0;
+            const errorRow = row < 0 && row > maxRows;
+            do{
+                row = console.readString("Insert row: ");
+                if (errorRow){
+                    console.writeln("Insert value between 0 and " + maxRows);
+                }
+            }while (errorRow);
+
+            
             let column = console.readString("Insert column: ");
             let coordinate = coordinate(row, column);
             return token(color, coordinate); //todo relación con token con la vista?¿

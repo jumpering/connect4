@@ -10,8 +10,6 @@ class YesNoDialogView{
     + isAffirmative()
 }
 class Board{
-    - MAX_ROWS
-    - MAX_COLUMNS
     - tokens[]
     + fillEmptyHoles()
     + isHole(token)
@@ -21,6 +19,8 @@ class Board{
     - isInLine(token)
 }
 class BoardView{
+    - MAX_ROWS
+    - MAX_COLUMNS
     - Board
     - TurnView
     + init()

@@ -23,8 +23,6 @@ function boardView() {
         board: board(),
         turnView: turnView(),
         init: function () {
-            const MAX_ROWS = 7;
-            const MAX_COLUMNS =  9;
             console.writeln("Connect4 title");
             this.board.fillEmptyTokens(this.MAX_ROWS, this.MAX_COLUMNS);//todo howto in board constructor
             do {

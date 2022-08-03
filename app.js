@@ -79,9 +79,6 @@ function board() {
                 return tokenHole;
             }
         },
-        getMaxColumns: function (){
-            return this.MAX_COLUMNS;
-        },
         getTokens: function (){
             return this.tokens;
         }
@@ -101,9 +98,14 @@ function turnView() {
                     console.writeln("Insert value between 0 and " + maxRows);
                 }
             }while (errorRow);
-
-            
-            let column = console.readString("Insert column: ");
+            let column = 0;
+            const errorColumn = column < 0 && column > maxColumns;
+            do{
+                column = console.readString("Insert column: ");
+                if (errorColumn){
+                    console.writeln("Insert value between 0 and " + maxColumns);
+                }
+            }while (errorColumn);
             let coordinate = coordinate(row, column);
             return token(color, coordinate);
         }

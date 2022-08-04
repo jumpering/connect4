@@ -19,14 +19,14 @@ function connect4() {
 function boardView() {
     return {
         MAX_ROWS: 7,
-        MAX_COLUMNS:  9, 
+        MAX_COLUMNS: 9,
         board: board(),
         turnView: turnView(),
         init: function () {
             console.writeln("Connect4 title");
-            this.board.fillAllTokensWithHoles(this.MAX_ROWS, this.MAX_COLUMNS);//todo howto in board constructor
             do {
                 this.show();
+                this.board.fillAllTokensWithHoles(this.MAX_ROWS, this.MAX_COLUMNS);
                 do {
                     token = this.turnView.getToken(this.MAX_ROWS, this.MAX_COLUMNS);
                 } while (!this.board.isHole(token));
@@ -35,7 +35,7 @@ function boardView() {
             } while (this.board.isEndGame());
             this.board.isComplete() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
         },
-        show: function () {
+        show: function () { //con array simple
             let tokens = this.board.getTokens();
             for (let i = 0; i < tokens.length(); i++) {
                 currentColor = tokens[i].getColor();
@@ -49,7 +49,7 @@ function boardView() {
                 if (hole === true) {
                     console.write(" o ");
                 }
-                if (tokens[i].getColumn() === this.MAX_COLUMNS){
+                if (tokens[i].getColumn() === this.MAX_COLUMNS) {
                     console.writeln("");
                 }
             }
@@ -61,14 +61,15 @@ function board() {
     return {
         tokens: [],
         fillAllTokensWithHoles: function (maxRows, maxColumns) {
+            let tokens = [maxRows][maxColumns];
             for (let i = 0; i < maxRows; i++) {
                 for (let j = 0; j < maxColumns; j++) {
                     let coordinate = coordinate(i, j);
                     let token = token(coordinate);
-                    this.tokens.push(token);
+                    tokens[i][j] = token;
                 }
             }
-            return this.tokens;
+            return tokens;
         },
         isHole: function (token) {
             tokenHole = false;
@@ -79,93 +80,114 @@ function board() {
                 return tokenHole;
             }
         },
-        getTokens: function (){
+        getTokens: function () {
             return this.tokens;
         },
-        isEndGame: function (){
-            //todo 
+        isEndGame: function () { 
+            flag = false;
+            for (let i = 0; i < this.tokens.length(); i++) {
+                for (let j = 0; j < this.tokens[i].length(); j++) {
+                    if (!this.tokens[i][j].isHole) {
+                        is4InLine |= this.isHorizontal(this.tokens[i][j]);
+                        is4InLine |= this.isVertical(this.tokens[i][j]);
+                    }
+                }
+            }
+            return flag;
         },
-        isComplete: function (){
-            const TOTAL_HOLES = 63; //todo must be MAX_ROWS * MAX_COLUMNS
+        isHorizontal: function (currentToken) {
+            ///// saber si es horizontal
+            currentToken[i + 1][j] = currentColor && !currentToken.isHole();
+            currentToken[i + 2][j] = currentColor and noEsHole;
+            currentToken[i + 3][j] = currentColor and noEsHole;
+            currentToken[i - 1][j] = currentColor and noEsHole;
+            currentToken[i - 2][j] = currentColor and noEsHole;
+            currentToken[i - 3][j] = currentColor and noEsHole;
+            return false
+
+        },
+
+        isComplete: function () {
+            const MAX_TOKENS_ON_BOARD = 63; //todo must be MAX_ROWS * MAX_COLUMNS
             let counter = 0;
-            for (let i= 0; i < this.tokens.length(); i++){
-                if(!this.tokens[i].isHole()){
+            for (let i = 0; i < this.tokens.length(); i++) {
+                if (!this.tokens[i].isHole()) {
                     counter++;
                 }
             }
-            return counter === TOTAL_HOLES;
+            return counter === MAX_TOKENS_ON_BOARD;
         }
     }
 }
 
 function turnView() {
-    return{
+    return {
         turn: turn(),
-        getToken: function (maxRows, maxColumns){
+        getToken: function (maxRows, maxColumns) {
             let color = this.turn.getColor;
             let row = this.getValidValue("row", maxRows);
             let column = this.getValidValue("column", maxColumns);
             let coordinate = coordinate(row, column);
             return token(color, coordinate);
         },
-        getValidValue: function (name, maxValue){
+        getValidValue: function (name, maxValue) {
             let value = 0;
             const error = value < 0 && value > maxValue;
-            do{
+            do {
                 value = console.readString("Insert " + name + ": ");
-                if (error){
+                if (error) {
                     console.writeln("Insert value between 0 and " + maxValue);
                 }
-            }while (error);
+            } while (error);
             return value;
         }
     }
 }
 
-function turn(){
-    return{
+function turn() {
+    return {
         color: color.Red,
-        getColor: function (){
+        getColor: function () {
             return this.color;
         },
-        nextTurn: function (){
+        nextTurn: function () {
             //todo
         }
     }
 }
 
-function coordinate(row, column){
-    return{
+function coordinate(row, column) {
+    return {
         row: row,
         column: column,
     }
 }
 
-function token(color, coordinate){
-    return{
+function token(color, coordinate) {
+    return {
         coordinate: coordinate,
         color: color,
         hole: true,
 
-        setColor: function (color){
+        setColor: function (color) {
             this.color = color;
         },
-        getColor: function (){
+        getColor: function () {
             return this.color;
         },
-        isHole: function (){
+        isHole: function () {
             return this.hole;
         },
-        setHole: function (boolean){
+        setHole: function (boolean) {
             this.hole = boolean;
         }
-        
+
     }
 }
 
-function color(){ //todo howto make enum?
+function color() { //todo howto make enum?
     Red,
-    Yellow
+        Yellow
 }
 
 function yesNoDialog() {

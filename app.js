@@ -24,7 +24,7 @@ function boardView() {
         turnView: turnView(),
         init: function () {
             console.writeln("Connect4 title");
-            this.board.fillEmptyTokens(this.MAX_ROWS, this.MAX_COLUMNS);//todo howto in board constructor
+            this.board.fillAllTokensWithHoles(this.MAX_ROWS, this.MAX_COLUMNS);//todo howto in board constructor
             do {
                 this.show();
                 do {
@@ -60,7 +60,7 @@ function boardView() {
 function board() {
     return {
         tokens: [],
-        fillEmptyTokens: function (maxRows, maxColumns) {
+        fillAllTokensWithHoles: function (maxRows, maxColumns) {
             for (let i = 0; i < maxRows; i++) {
                 for (let j = 0; j < maxColumns; j++) {
                     let coordinate = coordinate(i, j);

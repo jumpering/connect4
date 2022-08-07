@@ -27,11 +27,11 @@ function boardView() {
             this.board.fillAllHolesWithNoColorAndEmptyFlagTokens(this.MAX_ROWS, this.MAX_COLUMNS);
             do {
                 this.show();
-                let userCoordinate = "";
+                let inputCoordinate = "";
                 do {
-                    userCoordinate = this.turnView.getCoordinate(this.MAX_ROWS, this.MAX_COLUMNS);
-                } while (!this.board.isHole(userCoordinate));
-                this.board.putToken(userCoordinate);
+                    inputCoordinate = this.turnView.getCoordinate(this.MAX_ROWS, this.MAX_COLUMNS);
+                } while (!this.board.isHole(inputCoordinate));
+                this.board.putToken(inputCoordinate, this.turnView.getColor());
                 this.turnView.nextTurn();
             } while (this.board.isEndGame());
             this.board.isComplete() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
@@ -60,7 +60,7 @@ function board() {
     return {
         tokens: new Array(7),//todo remove new
         fillAllHolesWithNoColorAndEmptyFlagTokens: function (maxRows, maxColumns) {
-            for (let i = 0; i < 9; i++) {
+            for (let i = 0; i < 7; i++) {
                 this.tokens[i] = new Array(9);//todo remove new
             }
             for (let i = 0; i < maxRows; i++) {
@@ -70,15 +70,12 @@ function board() {
             }
         },
         isHole: function (coordinate) {
-            console.writeln("traza: " + coordinate.getRow() + ", " + coordinate.getColumn());
-            this.tokens[coordinate.getRow()][coordinate.getColumn()].test();
-            this.tokens[0][0].test();
             return this.tokens[coordinate.getRow()][coordinate.getColumn()].isHole();
         },
-        getTokens: function () {
-            return this.tokens;
+        putToken: function (coordinate, color){
+            this.tokens[coordinate.getRow()][coordinate.getColumn()] = token(color);
         },
-        isEndGame: function () {
+        isEndGame: function () {//todo
             const AMOUNT_TOKENS_FOR_CONNECT4 = 3;
             let sameColorInHorizontal = 0;
             for (let i = 0; i < this.tokens.length; i++) {
@@ -108,9 +105,12 @@ function board() {
                         counter++;
                     }
                 }
-                return counter === this.tokens.length();
+                return counter === this.tokens.length;
             }
-        }
+        },
+        getTokens: function () {
+            return this.tokens;
+        },
     }
 }
 
@@ -120,32 +120,40 @@ function turnView() {
         getCoordinate: function (maxRows, maxColumns) {
             let row = this.getValidValue("row", maxRows);
             let column = this.getValidValue("column", maxColumns);
-            let userCoordinate = coordinate(row, column);
-            return userCoordinate;
+            let inputCoordinate = coordinate(row, column);
+            return inputCoordinate;
         },
         getValidValue: function (name, maxValue) {
             let value = 0;
             let error = true;
             do {
-                value = console.readString("Insert " + name + ": ");
+                value = console.readNumber("Insert " + name + ": ");
                 error = value < 0 || value > maxValue;
                 if (error) {
                     console.writeln("Insert value between 0 and " + maxValue);
                 }
             } while (error);
             return value;
+        },
+        getColor: function (){
+            return this.turn.getColor();
+        },
+        nextTurn: function (){
+            this.turn.nextTurn();
         }
     }
 }
 
 function turn() {
     return {
-        color: "R",
+        color: colors.Red,
         getColor: function () {
             return this.color;
         },
         nextTurn: function () {
-            //todo
+            if (this.color === colors.Red){
+                this.color = colors.Yellow;
+            }
         }
     }
 }
@@ -198,9 +206,6 @@ function token() {
         },
         setHole: function (boolean) {
             this.hole = boolean;
-        },
-        test: function () {
-            console.writeln("desde token tripas");
         }
     }
 }

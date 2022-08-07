@@ -19,7 +19,7 @@ function connect4() {
 function boardView() {
     return {
         MAX_ROWS: 7,
-        MAX_COLUMNS: 9,
+        MAX_COLUMNS: 6,
         board: board(),
         turnView: turnView(),
         init: function () {
@@ -62,7 +62,7 @@ function board() {
         tokens: new Array(7),//todo remove new
         fillAllHolesWithNoColorAndEmptyFlagTokens: function (maxRows, maxColumns) {
             for (let i = 0; i < 7; i++) {
-                this.tokens[i] = new Array(9);//todo remove new
+                this.tokens[i] = new Array(6);//todo remove new
             }
             for (let i = 0; i < maxRows; i++) {
                 for (let j = 0; j < maxColumns; j++) {
@@ -79,12 +79,14 @@ function board() {
 
         },
         isEndGame: function () {//todo
-            const AMOUNT_TOKENS_FOR_CONNECT4 = 3;
-            let sameColorInHorizontal = 0;
+            const AMOUNT_TOKENS_FOR_CONNECT4 = 4; 
+            let sameColorInHorizontal = 1;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
-                    if (!this.tokens[i][j].isHole) {
+                    if (!this.tokens[i][j].isHole()) {
+                        console.writeln("cordinate to search horizontals: row: " + i + " column: " + j);
                         sameColorInHorizontal = this.sameColorInHorizontal(coordinate(i, j), this.tokens[i][j].getColor());
+
                     }
                 }
             }
@@ -93,7 +95,9 @@ function board() {
         sameColorInHorizontal: function (coordinate, color) {
             let counter = 0;
             let horizontalCoordinates = coordinate.getHorizontals();
+            console.writeln("horizontals length de coordenada...cuantas me devuelve coordenada: " + horizontalCoordinates.length);
             for (let i = 0; i < horizontalCoordinates.length; i++) {
+                console.writeln("row: " + horizontalCoordinates[i].getRow() + " column: " + horizontalCoordinates[i].getColumn());
                 if (this.tokens[horizontalCoordinates[i].getRow()][horizontalCoordinates[i].getColumn()].getColor() === color) {
                     counter++;
                 }
@@ -175,21 +179,23 @@ function coordinate(row, column) {
         },
         getHorizontals: function () {
             const MAX_COORDINATES = 3; //todo
-            const POSITIVE_LIMIT = 9; //todo
+            const POSITIVE_LIMIT = 6; //todo
             const NEGATIVE_LIMIT = 0; //todo
             let coordinates = [];
             let counter = 0;
-            if (this.row + 1 <= POSITIVE_LIMIT && counter <= MAX_COORDINATES) {
-                this.row++;
-                coordinates += coordinate(this.row, this.column);
-                counter++;
-            }
-            maxCounter = 0;
-            if (this.row - 1 >= NEGATIVE_LIMIT && counter <= MAX_COORDINATES) {
-                this.row--;
-                coordinates += coordinate(this.row, this.column);
-                counter++;
-            }
+            
+            do{
+                if (this.row + 1 <= POSITIVE_LIMIT) {
+                    this.row++;
+                    coordinates.push(coordinate(this.row, this.column));
+                    counter++;
+                }
+                // if (this.row - 1 >= NEGATIVE_LIMIT) {
+                //     this.row--;
+                //     coordinates.push(coordinate(this.row, this.column));
+                //     counter++;
+                // }
+            }while(counter < MAX_COORDINATES);
             return coordinates;
         }
     }

@@ -23,17 +23,18 @@ function boardView() {
         board: board(),
         turnView: turnView(),
         init: function () {
-            console.writeln("Connect4 title");
-            this.board.fillAllHolesWithNoColorAndEmptyFlagTokens(this.MAX_ROWS, this.MAX_COLUMNS);
+            console.writeln("Connect4\n");
+            this.board.fillAllHolesWithNoColorAndEmptyFlagTokens(this.MAX_ROWS, this.MAX_COLUMNS);//in board constructor, not in view
             do {
                 this.show();
+                console.writeln("Turn color: " + this.turnView.getColor());
                 let inputCoordinate = "";
                 do {
                     inputCoordinate = this.turnView.getCoordinate(this.MAX_ROWS, this.MAX_COLUMNS);
                 } while (!this.board.isHole(inputCoordinate));
                 this.board.putToken(inputCoordinate, this.turnView.getColor());
                 this.turnView.nextTurn();
-            } while (this.board.isEndGame());
+            } while (!this.board.isEndGame());
             this.board.isComplete() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
         },
         show: function () {
@@ -73,7 +74,9 @@ function board() {
             return this.tokens[coordinate.getRow()][coordinate.getColumn()].isHole();
         },
         putToken: function (coordinate, color){
-            this.tokens[coordinate.getRow()][coordinate.getColumn()] = token(color);
+            this.tokens[coordinate.getRow()][coordinate.getColumn()].setColor(color);
+            this.tokens[coordinate.getRow()][coordinate.getColumn()].setHole(false);
+
         },
         isEndGame: function () {//todo
             const AMOUNT_TOKENS_FOR_CONNECT4 = 3;
@@ -117,7 +120,7 @@ function board() {
 function turnView() {
     return {
         turn: turn(),
-        getCoordinate: function (maxRows, maxColumns) {
+        getCoordinate: function (maxRows, maxColumns) { //todo now user can select to column like tictactoe, not like in real connect4 game
             let row = this.getValidValue("row", maxRows);
             let column = this.getValidValue("column", maxColumns);
             let inputCoordinate = coordinate(row, column);
@@ -146,14 +149,16 @@ function turnView() {
 
 function turn() {
     return {
-        color: colors.Red,
+        color: colors().Red,
         getColor: function () {
             return this.color;
         },
         nextTurn: function () {
-            if (this.color === colors.Red){
-                this.color = colors.Yellow;
-            }
+            if (this.color === colors().Red){
+                this.color = colors().Yellow;
+            } else {
+                this.color = colors().Red;
+            }        
         }
     }
 }

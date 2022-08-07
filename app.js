@@ -24,21 +24,22 @@ function boardView() {
         turnView: turnView(),
         init: function () {
             console.writeln("Connect4 title");
-            this.board.fillAllHolesWithNoColorAndEmptyFlagTokens(MAX_ROWS,MAX_COLUMNS);
+            this.board.fillAllHolesWithNoColorAndEmptyFlagTokens(this.MAX_ROWS, this.MAX_COLUMNS);
             do {
                 this.show();
+                let userCoordinate = "";
                 do {
-                    userCoordinate = this.turnView.getCoordinate(MAX_ROWS,MAX_COLUMNS);
-                } while (!this.board.isHole(coordinate));
-                this.board.putToken(coordinate);
+                    userCoordinate = this.turnView.getCoordinate(this.MAX_ROWS, this.MAX_COLUMNS);
+                } while (!this.board.isHole(userCoordinate));
+                this.board.putToken(userCoordinate);
                 this.turnView.nextTurn();
             } while (this.board.isEndGame());
             this.board.isComplete() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
         },
         show: function () {
             let tokens = this.board.getTokens();
-            for (let i = 0; i < tokens.length(); i++) {
-                for(let j = 0; j < tokens[i].length(); j++){
+            for (let i = 0; i < tokens.length; i++) {
+                for (let j = 0; j < tokens[i].length; j++) {
                     currentColor = tokens[i][j].getColor();
                     currentHole = tokens[i][j].isHole();
                     if (currentColor === colors().Red) {
@@ -61,50 +62,66 @@ function boardView() {
 
 function board() {
     return {
-        tokens: [],
-        fillAllHolesWithNoColorAndEmptyFlagTokens: function (maxRows,maxColumns) {
-            let tokens = [LIMIT.getRow()][LIMIT.getColumn()];
-            for (let i = 0; i < LIMIT.getRow(); i++) {
-                for (let j = 0; j < LIMIT.getColumn(); j++) {
-                    tokens[i][j] = token();
-                }
-            }
+        tokens: [[]],
+        fillAllHolesWithNoColorAndEmptyFlagTokens: function (maxRows, maxColumns) {
+            //hardcoded
+            this.tokens[
+                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
+                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
+                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
+                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
+                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
+                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
+                [token(), token(), token(), token(), token(), token(), token(), token(), token()]
+            ]
+            //coded not work
+            // for (let i = 0; i < maxRows; i++) {
+            //     for (let j = 0; j < maxColumns; j++) {
+            //         this.tokens[i][j] = token();
+            //     }
+            // }
         },
         isHole: function (coordinate) {
+            console.writeln("traza: " + coordinate.getRow() + ", " + coordinate.getColumn());
+            this.tokens[coordinate.getRow()][coordinate.getColumn()].test();
+            this.tokens[0][0].test();
             return this.tokens[coordinate.getRow()][coordinate.getColumn()].isHole();
         },
         getTokens: function () {
             return this.tokens;
         },
-        isEndGame: function () { 
+        isEndGame: function () {
+            const AMOUNT_TOKENS_FOR_CONNECT4 = 3;
             let sameColorInHorizontal = 0;
-            for (let i = 0; i < this.tokens.length(); i++) {
-                for (let j = 0; j < this.tokens[i].length(); j++) {
+            for (let i = 0; i < this.tokens.length; i++) {
+                for (let j = 0; j < this.tokens[i].length; j++) {
                     if (!this.tokens[i][j].isHole) {
-                        sameColorInHorizontal = this.sameColorInHorizontal(coordinate(i,j), this.tokens[i][j].getColor());
+                        sameColorInHorizontal = this.sameColorInHorizontal(coordinate(i, j), this.tokens[i][j].getColor());
                     }
                 }
             }
+            return sameColorInHorizontal === AMOUNT_TOKENS_FOR_CONNECT4;
         },
         sameColorInHorizontal: function (coordinate, color) {
             let counter = 0;
-            let horizontalCoordinates = coordinate.getThreeHorizontals();
-            for(let i = 0; i < horizontalCoordinates.length(); i++){
-                if(this.tokens[horizontalCoordinates[i].getRow()][horizontalCoordinates[i].getColumn()].getColor() === color){
+            let horizontalCoordinates = coordinate.getHorizontals();
+            for (let i = 0; i < horizontalCoordinates.length; i++) {
+                if (this.tokens[horizontalCoordinates[i].getRow()][horizontalCoordinates[i].getColumn()].getColor() === color) {
                     counter++;
                 }
             }
             return counter;
         },
-
         isComplete: function () {
             let counter = 0;
-            for (let i = 0; i < this.tokens.length(); i++) {
-                if (!this.tokens[i].isHole()) {
-                    counter++;
+            for (let i = 0; i < this.tokens.length; i++) {
+                for (let j = 0; j < this.tokens[i].length; j++) {
+                    if (!this.tokens[i][j].isHole()) {
+                        counter++;
+                    }
                 }
+                return counter === this.tokens.length();
             }
-            return counter === this.tokens.length();
         }
     }
 }
@@ -113,17 +130,17 @@ function turnView() {
     return {
         turn: turn(),
         getCoordinate: function (maxRows, maxColumns) {
-            let color = this.turn.getColor;
             let row = this.getValidValue("row", maxRows);
             let column = this.getValidValue("column", maxColumns);
-            let coordinate = coordinate(row, column);
-            return coordinate;
+            let userCoordinate = coordinate(row, column);
+            return userCoordinate;
         },
         getValidValue: function (name, maxValue) {
             let value = 0;
-            const error = value < 0 && value > maxValue;
+            let error = true;
             do {
                 value = console.readString("Insert " + name + ": ");
+                error = value < 0 || value > maxValue;
                 if (error) {
                     console.writeln("Insert value between 0 and " + maxValue);
                 }
@@ -135,7 +152,7 @@ function turnView() {
 
 function turn() {
     return {
-        color: color.Red,
+        color: "R",
         getColor: function () {
             return this.color;
         },
@@ -149,25 +166,25 @@ function coordinate(row, column) {
     return {
         row: row,
         column: column,
-        getRow: function(){
+        getRow: function () {
             return this.row;
         },
-        getColumn: function (){
+        getColumn: function () {
             return this.column;
         },
-        getThreeHorizontals: function (){
-            const MAX_COORDINATES = 3;
-            const POSITIVE_LIMIT = 9;
-            const NEGATIVE_LIMIT = 0;
+        getHorizontals: function () {
+            const MAX_COORDINATES = 3; //todo
+            const POSITIVE_LIMIT = 9; //todo
+            const NEGATIVE_LIMIT = 0; //todo
             let coordinates = [];
             let counter = 0;
-            if (this.row + 1 <= POSITIVE_LIMIT && counter <= MAX_COORDINATES){
+            if (this.row + 1 <= POSITIVE_LIMIT && counter <= MAX_COORDINATES) {
                 this.row++;
                 coordinates += coordinate(this.row, this.column);
                 counter++;
             }
             maxCounter = 0;
-            if (this.row - 1 >= NEGATIVE_LIMIT && counter <= MAX_COORDINATES){
+            if (this.row - 1 >= NEGATIVE_LIMIT && counter <= MAX_COORDINATES) {
                 this.row--;
                 coordinates += coordinate(this.row, this.column);
                 counter++;
@@ -177,9 +194,9 @@ function coordinate(row, column) {
     }
 }
 
-function token(color) {
+function token() {
     return {
-        color: color,
+        color: "",
         hole: true,
 
         setColor: function (color) {
@@ -193,13 +210,16 @@ function token(color) {
         },
         setHole: function (boolean) {
             this.hole = boolean;
+        },
+        test: function () {
+            console.writeln("desde token tripas");
         }
     }
 }
 
 function color() { //todo howto make enum?
-    Red,
-    Yellow
+    Red = "R";
+    Yellow = "Y";
 }
 
 function yesNoDialog() {

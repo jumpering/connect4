@@ -24,7 +24,7 @@ function boardView() {
         turnView: turnView(),
         init: function () {
             console.writeln("Connect4\n");
-            this.board.fillAllHolesWithNoColorAndEmptyFlagTokens(this.MAX_ROWS, this.MAX_COLUMNS);//in board constructor, not in view
+            this.board.fillAllHolesWithNoColorAndEmptyFlagTokens(this.MAX_ROWS, this.MAX_COLUMNS);//in board constructor?
             do {
                 this.show();
                 console.writeln("Turn color: " + this.turnView.getColor());
@@ -59,10 +59,11 @@ function boardView() {
 
 function board() {
     return {
-        tokens: new Array(7),//todo remove new
+        tokens: [],
         fillAllHolesWithNoColorAndEmptyFlagTokens: function (maxRows, maxColumns) {
+            this.tokens[maxRows]
             for (let i = 0; i < 7; i++) {
-                this.tokens[i] = new Array(6);//todo remove new
+                this.tokens[i] = [maxColumns];
             }
             for (let i = 0; i < maxRows; i++) {
                 for (let j = 0; j < maxColumns; j++) {
@@ -78,7 +79,7 @@ function board() {
             this.tokens[coordinate.getRow()][coordinate.getColumn()].setHole(false);
 
         },
-        isEndGame: function () {//todo
+        isEndGame: function () {//todo find connect 4 in all board
             const AMOUNT_TOKENS_FOR_CONNECT4 = 4; 
             let sameColorInHorizontal = 1;
             for (let i = 0; i < this.tokens.length; i++) {
@@ -183,7 +184,6 @@ function coordinate(row, column) {
             const NEGATIVE_LIMIT = 0; //todo
             let coordinates = [];
             let counter = 0;
-            
             do{
                 if (this.row + 1 <= POSITIVE_LIMIT) {
                     this.row++;

@@ -62,7 +62,7 @@ function board() {
         tokens: [],
         fillAllHolesWithNoColorAndEmptyFlagTokens: function (maxRows, maxColumns) {
             this.tokens[maxRows]
-            for (let i = 0; i < 7; i++) {
+            for (let i = 0; i < maxRows; i++) {
                 this.tokens[i] = [maxColumns];
             }
             for (let i = 0; i < maxRows; i++) {

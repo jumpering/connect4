@@ -40,21 +40,17 @@ function boardView() {
             let tokens = this.board.getTokens();
             for (let i = 0; i < tokens.length; i++) {
                 for (let j = 0; j < tokens[i].length; j++) {
-                    currentColor = tokens[i][j].getColor();
-                    currentHole = tokens[i][j].isHole();
-                    if (currentColor === colors().Red) {
+                    if (tokens[i][j].getColor() === colors().Red) {
                         console.write(" R ");
                     }
-                    if (currentColor === colors().Yellow) {
+                    if (tokens[i][j].getColor() === colors().Yellow) {
                         console.write(" Y ");
                     }
-                    if (currentHole === true) {
+                    if (tokens[i][j].isHole()) {
                         console.write(" o ");
                     }
-                    if (j === MAX_COLUMNS) {
-                        console.writeln("");
-                    }
                 }
+                console.writeln("");
             }
         }
     }
@@ -62,24 +58,16 @@ function boardView() {
 
 function board() {
     return {
-        tokens: [[]],
+        tokens: new Array(7),//todo remove new
         fillAllHolesWithNoColorAndEmptyFlagTokens: function (maxRows, maxColumns) {
-            //hardcoded
-            this.tokens[
-                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
-                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
-                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
-                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
-                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
-                [token(), token(), token(), token(), token(), token(), token(), token(), token()],
-                [token(), token(), token(), token(), token(), token(), token(), token(), token()]
-            ]
-            //coded not work
-            // for (let i = 0; i < maxRows; i++) {
-            //     for (let j = 0; j < maxColumns; j++) {
-            //         this.tokens[i][j] = token();
-            //     }
-            // }
+            for (let i = 0; i < 9; i++) {
+                this.tokens[i] = new Array(9);//todo remove new
+            }
+            for (let i = 0; i < maxRows; i++) {
+                for (let j = 0; j < maxColumns; j++) {
+                    this.tokens[i][j] = token();
+                }
+            }
         },
         isHole: function (coordinate) {
             console.writeln("traza: " + coordinate.getRow() + ", " + coordinate.getColumn());
@@ -196,7 +184,7 @@ function coordinate(row, column) {
 
 function token() {
     return {
-        color: "",
+        color: null,
         hole: true,
 
         setColor: function (color) {
@@ -217,9 +205,11 @@ function token() {
     }
 }
 
-function color() { //todo howto make enum?
-    Red = "R";
-    Yellow = "Y";
+function colors() { //todo howto make enum?
+    return{
+        Red: "red",
+        Yellow: "yellow",
+    }
 }
 
 function yesNoDialog() {

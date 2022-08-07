@@ -85,7 +85,6 @@ function board() {
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
                     if (!this.tokens[i][j].isHole()) {
-                        console.writeln("cordinate to search horizontals: row: " + i + " column: " + j);
                         sameColorInHorizontal = this.sameColorInHorizontal(coordinate(i, j), this.tokens[i][j].getColor());
 
                     }
@@ -96,9 +95,8 @@ function board() {
         sameColorInHorizontal: function (coordinate, color) {
             let counter = 0;
             let horizontalCoordinates = coordinate.getHorizontals();
-            console.writeln("horizontals length de coordenada...cuantas me devuelve coordenada: " + horizontalCoordinates.length);
             for (let i = 0; i < horizontalCoordinates.length; i++) {
-                console.writeln("row: " + horizontalCoordinates[i].getRow() + " column: " + horizontalCoordinates[i].getColumn());
+                console.writeln("TRAZA: row: " + horizontalCoordinates[i].getRow() + " column: " + horizontalCoordinates[i].getColumn());
                 if (this.tokens[horizontalCoordinates[i].getRow()][horizontalCoordinates[i].getColumn()].getColor() === color) {
                     counter++;
                 }

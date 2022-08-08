@@ -80,7 +80,7 @@ function board() {
 
         },
         isEndGame: function () {//todo find connect 4 in all board
-            const AMOUNT_TOKENS_FOR_CONNECT4 = 4; 
+            const AMOUNT_TOKENS_FOR_CONNECT4 = 3; 
             let sameColorInHorizontal = 1;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
@@ -94,13 +94,14 @@ function board() {
         },
         sameColorInHorizontal: function (coordinate, color) {
             let counter = 0;
-            let horizontalCoordinates = coordinate.getHorizontals();
+            let horizontalCoordinates = coordinate.getPositiveHorizontals();
             for (let i = 0; i < horizontalCoordinates.length; i++) {
                 console.writeln("TRAZA: row: " + horizontalCoordinates[i].getRow() + " column: " + horizontalCoordinates[i].getColumn());
                 if (this.tokens[horizontalCoordinates[i].getRow()][horizontalCoordinates[i].getColumn()].getColor() === color) {
                     counter++;
                 }
             }
+            console.writeln("TRAZA total same color: " + counter);
             return counter;
         },
         isComplete: function () {
@@ -176,24 +177,16 @@ function coordinate(row, column) {
         getColumn: function () {
             return this.column;
         },
-        getHorizontals: function () {
-            const MAX_COORDINATES = 3; //todo
-            const POSITIVE_LIMIT = 6; //todo
-            const NEGATIVE_LIMIT = 0; //todo
+        getPositiveHorizontals: function () {
+            const MAX_COORDINATES = 3; //todo argument in method?
+            const POSITIVE_LIMIT = 6; //todo argument in method?
             let coordinates = [];
-            let counter = 0;
             do{
-                if (this.row + 1 <= POSITIVE_LIMIT) {
-                    this.row++;
+                if (this.column + 1 < POSITIVE_LIMIT) {
+                    this.column++;
                     coordinates.push(coordinate(this.row, this.column));
-                    counter++;
                 }
-                // if (this.row - 1 >= NEGATIVE_LIMIT) {
-                //     this.row--;
-                //     coordinates.push(coordinate(this.row, this.column));
-                //     counter++;
-                // }
-            }while(counter < MAX_COORDINATES);
+            }while(this.column <= MAX_COORDINATES || this.column === POSITIVE_LIMIT);
             return coordinates;
         }
     }

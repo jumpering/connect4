@@ -44,10 +44,10 @@ function boardView() {
                     if (typeof (tokens[i][j]) === 'undefined') {
                         console.write(" o ");
                     }
-                    else {
+                    if (typeof (tokens[i][j]) === 'object') {
                         if (tokens[i][j].getColor() === colors().Red) {
                             console.write(" R ");
-                        } 
+                        }
                         if (tokens[i][j].getColor() === colors().Yellow) {
                             console.write(" Y ");
                         }
@@ -69,15 +69,15 @@ function board() {
             }
         },
         hasEmptyHolesInColumn: function (maxRows, column) {
-            return this.tokens[maxRows - 1][column] != undefined;
+            return this.tokens[maxRows - 1][column] != 'undefined';
         },
         putToken: function (column, color) {
             let emptyRow = this.getNextEmptyRow(column);
-            this.tokens[emptyRow][column].setColor(color);
+            this.tokens[emptyRow][column] = token(color);
         },
         getNextEmptyRow: function (column) {
             for (let i = 0; i < this.tokens.length; i++) {
-                if (typeof (tokens[i][column]) === undefined) {
+                if (typeof (this.tokens[i][column]) === 'undefined') {
                     return i;
                 }
             }
@@ -146,12 +146,12 @@ function coordinate(row, column) {
     }
 }
 
-function token() {
+function token(color) {
     return {
-        color: null,
-        setColor: function (color) {
-            this.color = color;
-        },
+        color: color,
+        // setColor: function (color) {
+        //     this.color = color;
+        // },
         getColor: function () {
             return this.color;
         }

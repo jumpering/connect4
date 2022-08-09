@@ -31,10 +31,10 @@ function boardView() {
                 let inputColumn = "";
                 do {
                     inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
-                    if (!this.board.hasEmptyHolesInColumn(inputColumn)){
+                    if (this.board.isCompleteColumn(inputColumn)){
                         console.writeln("this column has not empty holes, select another column");
                     }
-                } while (!this.board.hasEmptyHolesInColumn(inputColumn));
+                } while (this.board.isCompleteColumn(inputColumn));
                 this.board.putToken(inputColumn, this.turnView.getColor());
                 this.turnView.nextTurn();
             } while (!this.board.isEndGame());
@@ -71,8 +71,8 @@ function board() {
                 this.tokens[i] = new Array(maxColumns);
             }
         },
-        hasEmptyHolesInColumn: function (column) {
-            return this.tokens[0][column] != 'undefined';
+        isCompleteColumn: function (column) {
+            return typeof(this.tokens[0][column]) === 'object';
         },
         putToken: function (column, color) {
             let emptyRow = this.getNextEmptyRow(column);

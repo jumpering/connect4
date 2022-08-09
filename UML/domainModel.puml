@@ -14,12 +14,11 @@ Yellow
 
 Connect4 *--> Board
 Connect4 *--> "7..42" Turn
-Connect4 *--> Goal
+Player o--> Goal
 
 Goal *--> InLine
 
 Token "4" -->  InLine
-Player o--> InLine
 
 InLine <|-- Vertical
 InLine <|-- Horizontal

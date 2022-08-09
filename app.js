@@ -31,7 +31,10 @@ function boardView() {
                 let inputColumn = "";
                 do {
                     inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
-                } while (!this.board.hasEmptyHolesInColumn(this.MAX_ROWS, inputColumn));
+                    if (!this.board.hasEmptyHolesInColumn(inputColumn)){
+                        console.writeln("this column has not empty holes, select another column");
+                    }
+                } while (!this.board.hasEmptyHolesInColumn(inputColumn));
                 this.board.putToken(inputColumn, this.turnView.getColor());
                 this.turnView.nextTurn();
             } while (!this.board.isEndGame());
@@ -68,15 +71,15 @@ function board() {
                 this.tokens[i] = new Array(maxColumns);
             }
         },
-        hasEmptyHolesInColumn: function (maxRows, column) {
-            return this.tokens[maxRows - 1][column] != 'undefined';
+        hasEmptyHolesInColumn: function (column) {
+            return this.tokens[0][column] != 'undefined';
         },
         putToken: function (column, color) {
             let emptyRow = this.getNextEmptyRow(column);
             this.tokens[emptyRow][column] = token(color);
         },
         getNextEmptyRow: function (column) {
-            for (let i = 0; i < this.tokens.length; i++) {
+            for (let i = this.tokens.length - 1; i >= 0; i--) {
                 if (typeof (this.tokens[i][column]) === 'undefined') {
                     return i;
                 }

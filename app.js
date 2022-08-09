@@ -31,14 +31,14 @@ function boardView() {
                 let inputColumn = "";
                 do {
                     inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
-                    if (this.board.isCompleteColumn(inputColumn)){
+                    if (this.board.isFilledColumn(inputColumn)) {
                         console.writeln("this column has not empty holes, select another column");
                     }
-                } while (this.board.isCompleteColumn(inputColumn));
+                } while (this.board.isFilledColumn(inputColumn));
                 this.board.putToken(inputColumn, this.turnView.getColor());
                 this.turnView.nextTurn();
             } while (!this.board.isEndGame());
-            console.writeln (this.board.isComplete() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");
+            console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");//todo ojo ganador u´ltima fichaa
         },
         show: function () {
             let tokens = this.board.getTokens();
@@ -66,13 +66,13 @@ function board() {
     return {
         tokens: [],
         reset: function (maxRows, maxColumns) {
-            //this.tokens[maxRows];
+            this.tokens[maxRows];
             for (let i = 0; i < maxRows; i++) {
                 this.tokens[i] = new Array(maxColumns);
             }
         },
-        isCompleteColumn: function (column) {
-            return typeof(this.tokens[0][column]) === 'object';
+        isFilledColumn: function (column) {
+            return typeof (this.tokens[0][column]) === 'object';
         },
         putToken: function (column, color) {
             let emptyRow = this.getNextEmptyRow(column);
@@ -87,22 +87,22 @@ function board() {
 
         },
         isEndGame: function () {//todo find connect 4 in all board
-            if (this.isComplete()){
+            if (this.isFilled()) {
                 return true;
             }
             return false;
         },
-        isComplete: function () {
+        isFilled: function () {
             countTokens = 0;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
-                    if (typeof (this.tokens[i][j]) === 'object'){
+                    if (typeof (this.tokens[i][j]) === 'object') {
                         countTokens++;
                     }
                 }
+            }
             return countTokens === 42;//todo magic number
-        }
-    },
+        },
         getTokens: function () {
             return this.tokens;
         },
@@ -117,9 +117,9 @@ function turnView() {
             let error = true;
             do {
                 column = console.readNumber("Insert column: ");
-                error = column < 0 || column > maxColumns;
+                error = column < 0 || column >= maxColumns;
                 if (error) {
-                    console.writeln("Insert value between 0 and " + maxColumns);
+                    console.writeln("Insert value between 0 and " + (maxColumns - 1));
                 }
             } while (error);
             return column;
@@ -165,9 +165,6 @@ function coordinate(row, column) {
 function token(color) {
     return {
         color: color,
-        // setColor: function (color) {
-        //     this.color = color;
-        // },
         getColor: function () {
             return this.color;
         }

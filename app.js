@@ -88,11 +88,8 @@ function board() {
             }
 
         },
-        isEndGame: function () {//todo find connect 4 in all board
-            if (this.isFilled()) {
-                return true;
-            }
-            return false;
+        isEndGame: function () {
+            return this.isFilled(); //todo this.isFilled() || isFourInLine()
         },
         isFilled: function () {
             countTokens = 0;
@@ -104,6 +101,14 @@ function board() {
                 }
             }
             return countTokens === 42;//todo magic number
+        },
+        isFourInLine: function () {
+            //recorrer cada fila buscando 4 iguales horizontal
+            for (let i = 0; i < this.tokens.length; i++) {
+                for (let j = 0; j < this.tokens[i].length; j++) { 
+                    
+                }
+            }
         },
         getTokens: function () {
             return this.tokens;

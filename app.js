@@ -41,17 +41,16 @@ function boardView() {
             let tokens = this.board.getTokens();
             for (let i = 0; i < tokens.length; i++) {
                 for (let j = 0; j < tokens[i].length; j++) {
-                    console.writeln(tokens[i][j]);
-                    if (typeof tokens[i][j] === undefined) {
+                    if (typeof (tokens[i][j]) === 'undefined') {
                         console.write(" o ");
                     }
                     else {
-                        // if (tokens[i][j].getColor() === colors().Red) {
-                        //     console.write(" R ");
-                        // } 
-                        // if (tokens[i][j].getColor() === colors().Yellow) {
-                        //     console.write(" Y ");
-                        // }
+                        if (tokens[i][j].getColor() === colors().Red) {
+                            console.write(" R ");
+                        } 
+                        if (tokens[i][j].getColor() === colors().Yellow) {
+                            console.write(" Y ");
+                        }
                     }
                 }
                 console.writeln("");
@@ -64,12 +63,9 @@ function board() {
     return {
         tokens: [],
         reset: function (maxRows, maxColumns) {
-            this.tokens[maxColumns];
+            this.tokens[maxRows];
             for (let i = 0; i < maxRows; i++) {
-                for(let j = 0; j < maxColumns; j++){
-                    this.tokens[i][j] = undefined;
-                }
-                // this.tokens[i] = [maxColumns];
+                this.tokens[i] = new Array(maxColumns);
             }
         },
         hasEmptyHolesInColumn: function (maxRows, column) {

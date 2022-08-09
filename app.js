@@ -32,7 +32,7 @@ function boardView() {
                 do {
                     inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
                     if (this.board.isFilledColumn(inputColumn)) {
-                        console.writeln("this column has not empty holes, select another column");
+                        console.writeln("This column has not empty holes, select another column");
                     }
                 } while (this.board.isFilledColumn(inputColumn));
                 this.board.putToken(inputColumn, this.turnView.getColor());
@@ -47,7 +47,7 @@ function boardView() {
             for (let i = 0; i < tokens.length; i++) {
                 for (let j = 0; j < tokens[i].length; j++) {
                     if (typeof (tokens[i][j]) === 'undefined') {
-                        console.write(" o ");
+                        console.write(" · ");
                     }
                     if (typeof (tokens[i][j]) === 'object') {
                         if (tokens[i][j].getColor() === colors().Red) {
@@ -68,9 +68,9 @@ function board() {
     return {
         tokens: [],
         reset: function (maxRows, maxColumns) {
-            this.tokens[maxRows];
+            this.tokens = new Array(maxRows)//todo remove new
             for (let i = 0; i < maxRows; i++) {
-                this.tokens[i] = new Array(maxColumns);
+                this.tokens[i] = new Array(maxColumns);//todo remove new
             }
         },
         isFilledColumn: function (column) {

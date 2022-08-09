@@ -38,7 +38,7 @@ function boardView() {
                 this.board.putToken(inputColumn, this.turnView.getColor());
                 this.turnView.nextTurn();
             } while (!this.board.isEndGame());
-            this.board.isComplete() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!";
+            console.writeln (this.board.isComplete() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");
         },
         show: function () {
             let tokens = this.board.getTokens();
@@ -66,7 +66,7 @@ function board() {
     return {
         tokens: [],
         reset: function (maxRows, maxColumns) {
-            this.tokens[maxRows];
+            //this.tokens[maxRows];
             for (let i = 0; i < maxRows; i++) {
                 this.tokens[i] = new Array(maxColumns);
             }
@@ -87,9 +87,22 @@ function board() {
 
         },
         isEndGame: function () {//todo find connect 4 in all board
+            if (this.isComplete()){
+                return true;
+            }
+            return false;
         },
         isComplete: function () {
-        },
+            countTokens = 0;
+            for (let i = 0; i < this.tokens.length; i++) {
+                for (let j = 0; j < this.tokens[i].length; j++) {
+                    if (typeof (this.tokens[i][j]) === 'object'){
+                        countTokens++;
+                    }
+                }
+            return countTokens === 42;//todo magic number
+        }
+    },
         getTokens: function () {
             return this.tokens;
         },

@@ -20,7 +20,7 @@ function boardView() {
     return {
         MAX_ROWS: 6,
         MAX_COLUMNS: 7,
-        board: board(this.MAX_ROWS, this.MAX_COLUMNS),
+        board: board(),
         turnView: turnView(),
         init: function () {
             console.writeln("Connect4\n");

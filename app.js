@@ -23,11 +23,11 @@ function boardView() {
         board: board(),
         turnView: turnView(),
         init: function () {
-            console.writeln("Connect4\n");
+            console.writeln("\n      Connect4\n");
             this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//in board constructor?
             do {
                 this.show();
-                console.writeln("Turn color: " + this.turnView.getColor());
+                console.write("\nTurn " + this.turnView.getColor());
                 let inputColumn = "";
                 do {
                     inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
@@ -42,6 +42,8 @@ function boardView() {
         },
         show: function () {
             let tokens = this.board.getTokens();
+            console.writeln("\n 0  1  2  3  4  5  6");
+            console.writeln("--------------------");
             for (let i = 0; i < tokens.length; i++) {
                 for (let j = 0; j < tokens[i].length; j++) {
                     if (typeof (tokens[i][j]) === 'undefined') {
@@ -116,7 +118,7 @@ function turnView() {
             let column = 0;
             let error = true;
             do {
-                column = console.readNumber("Insert column: ");
+                column = console.readNumber(" insert column: ");
                 error = column < 0 || column >= maxColumns;
                 if (error) {
                     console.writeln("Insert value between 0 and " + (maxColumns - 1));

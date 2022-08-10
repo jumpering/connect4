@@ -106,7 +106,6 @@ function board() {
             let counter = 0;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
-                    posicionAnterior = i; 
                     //para cada fila
                     if (typeof (this.tokens[i][j]) === 'object'){
                         counter++; 
@@ -115,10 +114,12 @@ function board() {
                         console.writeln("son 4: " + counter);
                         return true;
                     } 
+                    if(typeof (this.tokens[i][j]) === 'undefined'){
+                        counter = 0;
+                    }
                 }
                 counter = 0;
             }
-            //return false;
         },
         getTokens: function () {
             return this.tokens;

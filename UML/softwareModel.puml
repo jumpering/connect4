@@ -65,7 +65,6 @@ Connect4 ..> YesNoDialogView
 BoardView ..> Board
 BoardView ..> TurnView
 TurnView o--> Turn
-Board --> "hace falta result?" Result
 
 Board o--> Token
 

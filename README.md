@@ -1,5 +1,5 @@
 ## Domain model
-![DomainModel](/UML/domainModel.svg)
+![DomainModel](/out/UML/domainModel/domainModel.svg)
 
 ## Software model
-![DomainModel](/UML/softwareModel.svg)
+![DomainModel](/out/UML/sofwareModel/softwareModel.svg)

@@ -11,12 +11,15 @@ class YesNoDialogView{
 }
 class Board{
     - tokens[]
-    + fillEmptyHoles()
-    + isHole(token)
-    + putToken(token)
+    + reset(maxRows, maxColumns)
+    + isFilledColumn(column)
+    + putToken(column, color)
+    + getNextEmptyRow(column)
     + isEndGame()
-    + isFullBoard()
-    - isInLine(token)
+    + isFilled()
+    + isFourInLine()
+    - isHorizontal(color)
+    + getTokens()
 }
 class BoardView{
     - MAX_ROWS
@@ -29,27 +32,24 @@ class BoardView{
 class Coordinate{
     - row
     - column
-    + isOnRange()
+    + getRow()
+    + getColumn()
 }
 class Token{
     - Color
-    - Coordinate
     + getColor()
-    + isHole()
 }
 class TurnView{
     - turn
+    + getColumn(maxColumns)
     + nextTurn()
-    + getToken()
     + getColor()
 }
 
 class Turn{
-    - currentColor
-    + nextTurn()
-    + getToken()
+    - color
     + getColor()
-    
+    + nextTurn()
 }
 
 class Result

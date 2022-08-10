@@ -38,6 +38,7 @@ function boardView() {
                 this.board.putToken(inputColumn, this.turnView.getColor());
                 this.turnView.nextTurn();
             } while (!this.board.isEndGame());
+            this.show();
             console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");//todo ojo ganador u´ltima fichaa
         },
         show: function () {
@@ -86,10 +87,9 @@ function board() {
                     return i;
                 }
             }
-
         },
         isEndGame: function () {
-            return this.isFilled(); //todo this.isFilled() || isFourInLine()
+            return this.isFilled() || this.isFourInLine();
         },
         isFilled: function () {
             countTokens = 0;
@@ -103,12 +103,23 @@ function board() {
             return countTokens === 42;//todo magic number
         },
         isFourInLine: function () {
-            //recorrer cada fila buscando 4 iguales horizontal
-            for (let i = 0; i < this.tokens.length; i++) {
-                for (let j = 0; j < this.tokens[i].length; j++) { 
-                    
-                }
-            }
+            // let counter = 0;
+            // for (let i = 0; i < this.tokens.length; i++) {
+            //     for (let j = 0; j < this.tokens[i].length; j++) {
+            //         posicionAnterior = i; 
+            //         //para cada fila
+            //         if (typeof (this.tokens[i][j]) === 'object'){
+            //             counter++; 
+            //         }
+            //     }
+            //     console.writeln("TRAZA: " + counter);
+            //     if(counter === 4){
+            //         return true;
+            //     } else {
+            //         counter = 0;
+            //     }
+            // }
+            return false;
         },
         getTokens: function () {
             return this.tokens;
@@ -201,7 +212,7 @@ function yesNoDialog() {
             } while (this.error);
             return this.response;
         },
-        isAffirmative() {
+        isAffirmative: function() {
             return this.response === this.YES;
         }
     }

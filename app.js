@@ -102,12 +102,15 @@ function board() {
             }
             return countTokens === 42;//todo magic number
         },
-        isFourInLine: function () {
+        isFourInLine: function () {            
+            return this.isHorizontal(colors().Red);//todo foreach colors
+        },
+        isHorizontal: function (color){
             let counter = 0;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
                     //para cada fila
-                    if (typeof (this.tokens[i][j]) === 'object'){
+                    if (typeof (this.tokens[i][j]) === 'object' && this.tokens[i][j].getColor() === color){
                         counter++; 
                     } 
                     if(counter === 4){
@@ -180,7 +183,7 @@ function coordinate(row, column) {
     }
 }
 
-function token(color) {
+function token(color) {//todo innecesary class?
     return {
         color: color,
         getColor: function () {

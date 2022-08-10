@@ -39,7 +39,7 @@ function boardView() {
                 this.turnView.nextTurn();
             } while (!this.board.isEndGame());
             this.show();
-            console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");//todo ojo ganador color
+            console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");//todo ojo color ganador
         },
         show: function () {
             let tokens = this.board.getTokens();
@@ -102,22 +102,22 @@ function board() {
             }
             return countTokens === 42;//todo magic number
         },
-        isFourInLine: function () {            
+        isFourInLine: function () {
             return this.isHorizontal(colors().Red);//todo foreach colors
         },
-        isHorizontal: function (color){
+        isHorizontal: function (color) {
             let counter = 0;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
                     //para cada fila
-                    if (typeof (this.tokens[i][j]) === 'object' && this.tokens[i][j].getColor() === color){
-                        counter++; 
-                    } 
-                    if(counter === 4){
+                    if (typeof (this.tokens[i][j]) === 'object' && this.tokens[i][j].getColor() === color) {
+                        counter++;
+                    }
+                    if (counter === 4) {
                         console.writeln("son 4: " + counter);
                         return true;
-                    } 
-                    if(typeof (this.tokens[i][j]) === 'undefined'){
+                    }
+                    if (typeof (this.tokens[i][j]) === 'undefined') {
                         counter = 0;
                     }
                 }
@@ -215,7 +215,7 @@ function yesNoDialog() {
             } while (this.error);
             return this.response;
         },
-        isAffirmative: function() {
+        isAffirmative: function () {
             return this.response === this.YES;
         }
     }

@@ -52,8 +52,6 @@ class Turn{
     + nextTurn()
 }
 
-class Result
-
 enum Colors{
 Red
 Yellow

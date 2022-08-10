@@ -39,7 +39,7 @@ function boardView() {
                 this.turnView.nextTurn();
             } while (!this.board.isEndGame());
             this.show();
-            console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");//todo ojo ganador u´ltima fichaa
+            console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");//todo ojo ganador color
         },
         show: function () {
             let tokens = this.board.getTokens();
@@ -103,23 +103,22 @@ function board() {
             return countTokens === 42;//todo magic number
         },
         isFourInLine: function () {
-            // let counter = 0;
-            // for (let i = 0; i < this.tokens.length; i++) {
-            //     for (let j = 0; j < this.tokens[i].length; j++) {
-            //         posicionAnterior = i; 
-            //         //para cada fila
-            //         if (typeof (this.tokens[i][j]) === 'object'){
-            //             counter++; 
-            //         }
-            //     }
-            //     console.writeln("TRAZA: " + counter);
-            //     if(counter === 4){
-            //         return true;
-            //     } else {
-            //         counter = 0;
-            //     }
-            // }
-            return false;
+            let counter = 0;
+            for (let i = 0; i < this.tokens.length; i++) {
+                for (let j = 0; j < this.tokens[i].length; j++) {
+                    posicionAnterior = i; 
+                    //para cada fila
+                    if (typeof (this.tokens[i][j]) === 'object'){
+                        counter++; 
+                    } 
+                    if(counter === 4){
+                        console.writeln("son 4: " + counter);
+                        return true;
+                    } 
+                }
+                counter = 0;
+            }
+            //return false;
         },
         getTokens: function () {
             return this.tokens;

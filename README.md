@@ -2,4 +2,4 @@
 ![DomainModel](/out/UML/domainModel/domainModel.svg)
 
 ## Software model
-![DomainModel](/out/UML/sofwareModel/softwareModel.svg)
+![SoftwareModel](/out/UML/softwareModel/softwareModel.svg)

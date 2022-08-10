@@ -60,7 +60,7 @@ Yellow
 Connect4 ..> BoardView
 Connect4 ..> YesNoDialogView
 
-BoardView ..> Board
+BoardView *--> Board
 BoardView ..> TurnView
 TurnView o--> Turn
 

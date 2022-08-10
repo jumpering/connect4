@@ -26,7 +26,7 @@ InLine <|-- Diagonal
 
 
 Turn o--> "2" Player
-Turn --> Board
+Turn <-- Board
 
 Board *--> "7x6" Holes
 

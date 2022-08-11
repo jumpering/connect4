@@ -14,7 +14,7 @@ Yellow
 
 Connect4 *--> Board
 Connect4 *--> "7..42" Turn
-Player o--> Goal
+Player --> Goal
 
 Goal *--> InLine
 

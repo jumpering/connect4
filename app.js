@@ -27,16 +27,17 @@ function boardView() {
             this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//in board constructor?
             do {
                 this.show();
+                this.turnView.nextTurn();
                 console.write("\nTurn " + this.turnView.getColor());
                 let inputColumn = "";
                 do {
+                    // this.turnView.nextTurn();
                     inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
                     if (this.board.isFilledColumn(inputColumn)) {
                         console.writeln("This column has not empty holes, select another column");
                     }
                 } while (this.board.isFilledColumn(inputColumn));
                 this.board.putToken(inputColumn, this.turnView.getColor());
-                this.turnView.nextTurn();
             } while (!this.board.isEndGame());
             this.show();
             console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");//todo ojo color ganador
@@ -102,27 +103,57 @@ function board() {
             }
             return countTokens === 42;//todo magic number
         },
-        isFourInLine: function () {
-            return this.isHorizontal(colors().Red);//todo foreach colors
+        isFourInLine: function () {//todo foreach colors
+
+            return this.isHorizontal(colors().Red) || this.isHorizontal(colors().Yellow)
+            || this.isVertical(colors().Red) || this.isVertical(colors().Yellow) 
+            || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow)
+            || this.isReverseDiagonal(colors().Red) || this.isReverseDiagonal(colors().Yellow);
         },
         isHorizontal: function (color) {
+            const FOUR_IN_LINE = 4;
             let counter = 0;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
                     //para cada fila
                     if (typeof (this.tokens[i][j]) === 'object' && this.tokens[i][j].getColor() === color) {
                         counter++;
-                    }
-                    if (counter === 4) {
-                        console.writeln("son 4: " + counter);
-                        return true;
-                    }
-                    if (typeof (this.tokens[i][j]) === 'undefined') {
+                    } else if (typeof (this.tokens[i][j]) === 'undefined') {
                         counter = 0;
+                    }
+                    if (counter === FOUR_IN_LINE) {
+                        return true;
                     }
                 }
                 counter = 0;
             }
+        },
+        isVertical: function (color) {
+            const FOUR_IN_LINE = 4;
+            let counter = 0;
+            for (let i = 0; i < this.tokens.length; i++) {
+                for (let j = 0; j < this.tokens[i].length; j++) {
+                    //////
+                    for (let k = this.getNextEmptyRow(j); k > 0; k--){
+                        console.writeln(this.tokens[k][j] === 'undefined');
+                        if(this.tokens[k][j] === 'undefined'){
+                            console.writeln("...");
+                            counter++;
+                        }
+                    }
+                    if (counter === FOUR_IN_LINE) {
+                        return true;
+                    }
+                }
+                console.writeln("COUNTER:" + counter);
+            }
+            return false;
+        },
+        isDiagonal: function (color) {
+            return false;
+        },
+        isReverseDiagonal: function (color) {
+            return false;
         },
         getTokens: function () {
             return this.tokens;
@@ -156,12 +187,14 @@ function turnView() {
 
 function turn() {
     return {
-        color: colors().Red,
+        color: undefined,
         getColor: function () {
             return this.color;
         },
         nextTurn: function () {
-            if (this.color === colors().Red) {
+            if (this.color === 'undefined'){
+                this.color = colors().Red;
+            }else if (this.color === colors().Red) {
                 this.color = colors().Yellow;
             } else {
                 this.color = colors().Red;
@@ -170,7 +203,7 @@ function turn() {
     }
 }
 
-function coordinate(row, column) {
+function coordinate(row, column) {//todo dead code
     return {
         row: row,
         column: column,

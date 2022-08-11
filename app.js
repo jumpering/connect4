@@ -104,18 +104,16 @@ function board() {
             return countTokens === 42;//todo magic number
         },
         isFourInLine: function () {//todo foreach colors
-
             return this.isHorizontal(colors().Red) || this.isHorizontal(colors().Yellow)
-            || this.isVertical(colors().Red) || this.isVertical(colors().Yellow) 
-            || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow)
-            || this.isReverseDiagonal(colors().Red) || this.isReverseDiagonal(colors().Yellow);
+                || this.isVertical(colors().Red) || this.isVertical(colors().Yellow);
+            // || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow)
+            // || this.isReverseDiagonal(colors().Red) || this.isReverseDiagonal(colors().Yellow);
         },
         isHorizontal: function (color) {
             const FOUR_IN_LINE = 4;
             let counter = 0;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
-                    //para cada fila
                     if (typeof (this.tokens[i][j]) === 'object' && this.tokens[i][j].getColor() === color) {
                         counter++;
                     } else if (typeof (this.tokens[i][j]) === 'undefined') {
@@ -131,23 +129,21 @@ function board() {
         isVertical: function (color) {
             const FOUR_IN_LINE = 4;
             let counter = 0;
-            for (let i = 0; i < this.tokens.length; i++) {
-                for (let j = 0; j < this.tokens[i].length; j++) {
-                    //////
-                    for (let k = this.getNextEmptyRow(j); k > 0; k--){
-                        console.writeln(this.tokens[k][j] === 'undefined');
-                        if(this.tokens[k][j] === 'undefined'){
-                            console.writeln("...");
-                            counter++;
-                        }
+            for (let i = 0; i < 7; i++) {//magic number columns
+                let row = this.getNextEmptyRow(i);
+                for (let j = row; j < 5; j++) {//magic number rows
+                    if (typeof (this.tokens[j + 1][i]) === 'object') {// más si es del color
+                        counter++;
+                    }
+                    if (typeof (this.tokens[j + 1][i]) === 'undefined') {//aquí si es del otro color...
+                        counter = 0;
                     }
                     if (counter === FOUR_IN_LINE) {
                         return true;
                     }
                 }
-                console.writeln("COUNTER:" + counter);
+                counter = 0;
             }
-            return false;
         },
         isDiagonal: function (color) {
             return false;
@@ -192,9 +188,9 @@ function turn() {
             return this.color;
         },
         nextTurn: function () {
-            if (this.color === 'undefined'){
+            if (this.color === 'undefined') {
                 this.color = colors().Red;
-            }else if (this.color === colors().Red) {
+            } else if (this.color === colors().Red) {
                 this.color = colors().Yellow;
             } else {
                 this.color = colors().Red;

@@ -24,14 +24,13 @@ function boardView() {
         turnView: turnView(),
         init: function () {
             console.writeln("\n      Connect4\n");
-            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//in board constructor?
+            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//todo in board constructor?
             do {
                 this.show();
-                this.turnView.nextTurn();
+                this.turnView.nextTurn();//todo es un poco raro...tal vez init?¿
                 console.write("\nTurn " + this.turnView.getColor());
-                let inputColumn = "";
+                let inputColumn;
                 do {
-                    // this.turnView.nextTurn();
                     inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
                     if (this.board.isFilledColumn(inputColumn)) {
                         console.writeln("This column has not empty holes, select another column");
@@ -40,7 +39,7 @@ function boardView() {
                 this.board.putToken(inputColumn, this.turnView.getColor());
             } while (!this.board.isEndGame());
             this.show();
-            console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");//todo ojo color ganador
+            console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");
         },
         show: function () {
             let tokens = this.board.getTokens();
@@ -129,13 +128,13 @@ function board() {
         isVertical: function (color) {
             const FOUR_IN_LINE = 4;
             let counter = 0;
-            for (let i = 0; i < 7; i++) {//magic number columns
+            for (let i = 0; i < 7; i++) {//todo magic number columns
                 let row = this.getNextEmptyRow(i);
-                for (let j = row; j < 5; j++) {//magic number rows
-                    if (typeof (this.tokens[j + 1][i]) === 'object') {// más si es del color
+                for (let j = row; j < 5; j++) {//todo magic number rows
+                    if (this.tokens[j + 1][i].getColor() === color) {//todo magic number + 1
                         counter++;
                     }
-                    if (typeof (this.tokens[j + 1][i]) === 'undefined') {//aquí si es del otro color...
+                    if (this.tokens[j + 1][i].getColor() !== color) {
                         counter = 0;
                     }
                     if (counter === FOUR_IN_LINE) {

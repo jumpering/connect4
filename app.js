@@ -27,7 +27,7 @@ function boardView() {
             this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//todo in board constructor?
             do {
                 this.show();
-                this.turnView.nextTurn();//todo es un poco raro...tal vez init?¿
+                this.turnView.nextTurn();//todo es un poco raro...
                 console.write("\nTurn " + this.turnView.getColor());
                 let inputColumn;
                 do {
@@ -78,10 +78,10 @@ function board() {
             return typeof (this.tokens[0][column]) === 'object';
         },
         putToken: function (column, color) {
-            let emptyRow = this.getNextEmptyRow(column);
+            let emptyRow = this.getFirstEmptyRowFromColumn(column);
             this.tokens[emptyRow][column] = token(color);
         },
-        getNextEmptyRow: function (column) {
+        getFirstEmptyRowFromColumn: function (column) {
             for (let i = this.tokens.length - 1; i >= 0; i--) {
                 if (typeof (this.tokens[i][column]) === 'undefined') {
                     return i;
@@ -104,8 +104,8 @@ function board() {
         },
         isFourInLine: function () {//todo foreach colors
             return this.isHorizontal(colors().Red) || this.isHorizontal(colors().Yellow)
-                || this.isVertical(colors().Red) || this.isVertical(colors().Yellow);
-            // || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow)
+                || this.isVertical(colors().Red) || this.isVertical(colors().Yellow)
+             || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow);
             // || this.isReverseDiagonal(colors().Red) || this.isReverseDiagonal(colors().Yellow);
         },
         isHorizontal: function (color) {
@@ -129,7 +129,7 @@ function board() {
             const FOUR_IN_LINE = 4;
             let counter = 0;
             for (let i = 0; i < 7; i++) {//todo magic number columns
-                let row = this.getNextEmptyRow(i);
+                let row = this.getFirstEmptyRowFromColumn(i);
                 for (let j = row; j < 5; j++) {//todo magic number rows
                     if (this.tokens[j + 1][i].getColor() === color) {//todo magic number + 1
                         counter++;
@@ -145,7 +145,48 @@ function board() {
             }
         },
         isDiagonal: function (color) {
-            return false;
+            console.writeln("analize diagonal");
+            let counter = 0;
+            let counterRows = 0;
+            let counterColumns = 0;
+            let coordinates = [];
+                // for(let i = 0; i <= counter, counter <= 5; i++){
+                //     for (let j = counterRows; counter <= 0, j >= 0; j--) {
+                //         for (let k = 0; counter <= 0, k <= counterColumns; k++) {
+                //             coordinates.push(coordinate(j,k));
+                //             console.write(" (" + j-- + ", " + k + ")"); 
+                //         }
+                //         counterRows++;
+                //         counterColumns++;
+                //         console.writeln(" ");
+                //     }
+                //     counter++;
+                //     console.writeln("counter: " + counter);
+                // } 
+
+
+
+
+
+                
+                for(let i = 0; i <= counter, counter < 5; i++){
+                    for (let j = 0; counter <= 5, j >= 0; j++) {
+                        for (let k = 6; counter <= 0, k > counterColumns; k--) {
+                            coordinates.push(coordinate(j,k));
+                            console.write(" (" + j + ", " + k + ")"); 
+                        }
+                        counterRows++;
+                        counterColumns++;
+                        console.writeln(" ");
+                    }
+                    counter++;
+                    console.writeln("counter: " + counter);
+                } 
+               
+
+
+
+            //return false;
         },
         isReverseDiagonal: function (color) {
             return false;

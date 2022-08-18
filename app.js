@@ -105,8 +105,8 @@ function board() {
         isFourInLine: function () {//todo foreach colors
             return this.isHorizontal(colors().Red) || this.isHorizontal(colors().Yellow)
                 || this.isVertical(colors().Red) || this.isVertical(colors().Yellow)
-                || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow);
-            // || this.isReverseDiagonal(colors().Red) || this.isReverseDiagonal(colors().Yellow);
+                || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow)
+                || this.isReverseDiagonal(colors().Red) || this.isReverseDiagonal(colors().Yellow);
         },
         isHorizontal: function (color) {
             const FOUR_IN_LINE = 4;
@@ -144,13 +144,26 @@ function board() {
                 counter = 0;
             }
         },
+
+        getMainDiagonals: function(){ //todo magic numbers
+
+            //return mainDiagonals;
+        },
         isDiagonal: function (color) {
             let counter = 0;
-            let coordinates = [];
-            for (let i = 0; i <= counter, counter <= 5; i++) {
+            let sameColors = 0;
+            for (let i = 0; i <= counter, counter < 6; i++) {
                 for (let j = counter; counter <= 0, j >= 0; j--) {
-                    for (let k = 0; counter <= 0, k <= counter; k++) {
-                        coordinates.push(coordinate(j, k));
+                    for (let k = 0; counter <= 0, k <= counter; k++) { 
+                        // let row = j--;
+                        // if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
+                        //     sameColors++;
+                        // } else{
+                        //     sameColors = 0;
+                        // } 
+                        // if (sameColors === 4){
+                        //     return true;
+                        // }  
                         console.write(" (" + j-- + ", " + k + ")");
                     }
                     console.writeln(" ");
@@ -158,19 +171,80 @@ function board() {
                 counter++;
             }
             counter = 0;
-            for (let i = 0; i <= counter, counter <= 5; i++) {
-                for (let j = counter; counter < 5, j <= counter; j++) {
+            sameColors = 0;
+            for (let i = 0; i <= counter, counter < 6; i++) {
+                for (let j = counter; counter < 6, j <= counter; j++) {
                     for (let k = 6; counter < 0, k > counter; k--) {
-                        //coordinates.push(coordinate(j,k));
+                        // let row = j++;
+                        // if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
+                        //     sameColors++;
+                        // } else{
+                        //     sameColors = 0;
+                        // }
+                        // if (sameColors === 4){
+                        //     return true;
+                        // } 
                         console.write(" (" + j++ + ", " + k + ")");
                     }
                     console.writeln(" ");
                 }
                 counter++;
             }
-            //return false;
+            return false;
         },
         isReverseDiagonal: function (color) {
+            let counter = 5;
+            let sameColors = 0;
+            let row = 0;
+            for (let i = 0; i <= counter, counter >= 0; i++) {
+                for (let j = row; counter >= 0, j <= 6; j++) {
+                    for (let k = 0; counter >= 0, k <= counter; k++) { 
+                        // let row = j--;
+                        // if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
+                        //     sameColors++;
+                        // } else{
+                        //     sameColors = 0;
+                        // } 
+                        // if (sameColors === 4){
+                        //     return true;
+                        // }  
+                        console.write(" (" + j++ + ", " + k + ")");
+                    }
+                    console.writeln(" ");
+                    row++;
+                }
+                counter--;
+            }
+
+             counter = 0;
+             sameColors = 0;
+             row = 5;
+            for (let i = 0; i <= counter, counter < 6; i++) {
+                for (let j = row; counter <= 0, j >= 0; j--) {
+                    for (let k = 6; counter < 0, k > counter; k--) { 
+                        // let row = j--;
+                        // if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
+                        //     sameColors++;
+                        // } else{
+                        //     sameColors = 0;
+                        // } 
+                        // if (sameColors === 4){
+                        //     return true;
+                        // }  
+                        console.write(" (" + j-- + ", " + k + ")");
+                    }
+                    console.writeln(" ");
+                    row--;
+                }
+                counter++;
+            }
+
+
+
+
+
+
+
             return false;
         },
         getTokens: function () {

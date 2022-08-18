@@ -155,18 +155,18 @@ function board() {
             for (let i = 0; i <= counter, counter < 6; i++) {
                 for (let j = counter; counter <= 0, j >= 0; j--) {
                     for (let k = 0; counter <= 0, k <= counter; k++) { 
-                        // let row = j--;
-                        // if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
-                        //     sameColors++;
-                        // } else{
-                        //     sameColors = 0;
-                        // } 
-                        // if (sameColors === 4){
-                        //     return true;
-                        // }  
-                        console.write(" (" + j-- + ", " + k + ")");
+                        let row = j--;
+                        if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
+                            sameColors++;
+                        } else{
+                            sameColors = 0;
+                        } 
+                        if (sameColors === 4){
+                            return true;
+                        }  
+                        //console.write(" (" + j-- + ", " + k + ")");
                     }
-                    console.writeln(" ");
+                    //console.writeln(" ");
                 }
                 counter++;
             }
@@ -175,18 +175,18 @@ function board() {
             for (let i = 0; i <= counter, counter < 6; i++) {
                 for (let j = counter; counter < 6, j <= counter; j++) {
                     for (let k = 6; counter < 0, k > counter; k--) {
-                        // let row = j++;
-                        // if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
-                        //     sameColors++;
-                        // } else{
-                        //     sameColors = 0;
-                        // }
-                        // if (sameColors === 4){
-                        //     return true;
-                        // } 
-                        console.write(" (" + j++ + ", " + k + ")");
+                        let row = j++;
+                        if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
+                            sameColors++;
+                        } else{
+                            sameColors = 0;
+                        }
+                        if (sameColors === 4){
+                            return true;
+                        } 
+                        //console.write(" (" + j++ + ", " + k + ")");
                     }
-                    console.writeln(" ");
+                    //console.writeln(" ");
                 }
                 counter++;
             }
@@ -199,18 +199,18 @@ function board() {
             for (let i = 0; i <= counter, counter >= 0; i++) {
                 for (let j = row; counter >= 0, j <= 6; j++) {
                     for (let k = 0; counter >= 0, k <= counter; k++) { 
-                        // let row = j--;
-                        // if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
-                        //     sameColors++;
-                        // } else{
-                        //     sameColors = 0;
-                        // } 
-                        // if (sameColors === 4){
-                        //     return true;
-                        // }  
-                        console.write(" (" + j++ + ", " + k + ")");
+                        let row = j++;
+                        if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
+                            sameColors++;
+                        } else{
+                            sameColors = 0;
+                        } 
+                        if (sameColors === 4){
+                            return true;
+                        }  
+                        //console.write(" (" + j++ + ", " + k + ")");
                     }
-                    console.writeln(" ");
+                    //console.writeln(" ");
                     row++;
                 }
                 counter--;
@@ -222,18 +222,18 @@ function board() {
             for (let i = 0; i <= counter, counter < 6; i++) {
                 for (let j = row; counter <= 0, j >= 0; j--) {
                     for (let k = 6; counter < 0, k > counter; k--) { 
-                        // let row = j--;
-                        // if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
-                        //     sameColors++;
-                        // } else{
-                        //     sameColors = 0;
-                        // } 
-                        // if (sameColors === 4){
-                        //     return true;
-                        // }  
-                        console.write(" (" + j-- + ", " + k + ")");
+                        let row = j--;
+                        if(typeof (this.tokens[row][k]) === 'object' && this.tokens[row][k].getColor() === color){
+                            sameColors++;
+                        } else{
+                            sameColors = 0;
+                        } 
+                        if (sameColors === 4){
+                            return true;
+                        }  
+                        //console.write(" (" + j-- + ", " + k + ")");
                     }
-                    console.writeln(" ");
+                    //console.writeln(" ");
                     row--;
                 }
                 counter++;

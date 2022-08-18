@@ -145,49 +145,29 @@ function board() {
             }
         },
         isDiagonal: function (color) {
-            console.writeln("analize diagonal");
             let counter = 0;
-            let counterRows = 0;
-            let counterColumns = 0;
             let coordinates = [];
             for (let i = 0; i <= counter, counter <= 5; i++) {
-                for (let j = counterRows; counter <= 0, j >= 0; j--) {
-                    for (let k = 0; counter <= 0, k <= counterColumns; k++) {
+                for (let j = counter; counter <= 0, j >= 0; j--) {
+                    for (let k = 0; counter <= 0, k <= counter; k++) {
                         coordinates.push(coordinate(j, k));
                         console.write(" (" + j-- + ", " + k + ")");
                     }
-                    counterRows++;
-                    counterColumns++;
                     console.writeln(" ");
                 }
                 counter++;
-                console.writeln("counter: " + counter);
             }
             counter = 0;
-            counterRows = 0;
-            counterColumns = 0;
-
-
-
-
             for (let i = 0; i <= counter, counter <= 5; i++) {
-                for (let j = counter; counter < 5, j <= counterRows; j++) {
-                    for (let k = 6; counter < 0, k > counterColumns; k--) {
+                for (let j = counter; counter < 5, j <= counter; j++) {
+                    for (let k = 6; counter < 0, k > counter; k--) {
                         //coordinates.push(coordinate(j,k));
                         console.write(" (" + j++ + ", " + k + ")");
                     }
-                    counterRows++;
-                    counterColumns++;
                     console.writeln(" ");
-
                 }
                 counter++;
-                console.writeln("counter: " + counter);
             }
-
-
-
-
             //return false;
         },
         isReverseDiagonal: function (color) {

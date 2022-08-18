@@ -105,7 +105,7 @@ function board() {
         isFourInLine: function () {//todo foreach colors
             return this.isHorizontal(colors().Red) || this.isHorizontal(colors().Yellow)
                 || this.isVertical(colors().Red) || this.isVertical(colors().Yellow)
-             || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow);
+                || this.isDiagonal(colors().Red) || this.isDiagonal(colors().Yellow);
             // || this.isReverseDiagonal(colors().Red) || this.isReverseDiagonal(colors().Yellow);
         },
         isHorizontal: function (color) {
@@ -150,39 +150,41 @@ function board() {
             let counterRows = 0;
             let counterColumns = 0;
             let coordinates = [];
-                // for(let i = 0; i <= counter, counter <= 5; i++){
-                //     for (let j = counterRows; counter <= 0, j >= 0; j--) {
-                //         for (let k = 0; counter <= 0, k <= counterColumns; k++) {
-                //             coordinates.push(coordinate(j,k));
-                //             console.write(" (" + j-- + ", " + k + ")"); 
-                //         }
-                //         counterRows++;
-                //         counterColumns++;
-                //         console.writeln(" ");
-                //     }
-                //     counter++;
-                //     console.writeln("counter: " + counter);
-                // } 
-
-
-
-
-
-                
-                for(let i = 0; i <= counter, counter < 5; i++){
-                    for (let j = 0; counter <= 5, j >= 0; j++) {
-                        for (let k = 6; counter <= 0, k > counterColumns; k--) {
-                            coordinates.push(coordinate(j,k));
-                            console.write(" (" + j + ", " + k + ")"); 
-                        }
-                        counterRows++;
-                        counterColumns++;
-                        console.writeln(" ");
+            for (let i = 0; i <= counter, counter <= 5; i++) {
+                for (let j = counterRows; counter <= 0, j >= 0; j--) {
+                    for (let k = 0; counter <= 0, k <= counterColumns; k++) {
+                        coordinates.push(coordinate(j, k));
+                        console.write(" (" + j-- + ", " + k + ")");
                     }
-                    counter++;
-                    console.writeln("counter: " + counter);
-                } 
-               
+                    counterRows++;
+                    counterColumns++;
+                    console.writeln(" ");
+                }
+                counter++;
+                console.writeln("counter: " + counter);
+            }
+            counter = 0;
+            counterRows = 0;
+            counterColumns = 0;
+
+
+
+
+            for (let i = 0; i <= counter, counter <= 5; i++) {
+                for (let j = counter; counter < 5, j <= counterRows; j++) {
+                    for (let k = 6; counter < 0, k > counterColumns; k--) {
+                        //coordinates.push(coordinate(j,k));
+                        console.write(" (" + j++ + ", " + k + ")");
+                    }
+                    counterRows++;
+                    counterColumns++;
+                    console.writeln(" ");
+
+                }
+                counter++;
+                console.writeln("counter: " + counter);
+            }
+
 
 
 

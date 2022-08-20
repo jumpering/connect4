@@ -24,10 +24,10 @@ function boardView() {
         turnView: turnView(),
         init: function () {
             console.writeln("\n      Connect4\n");
-            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//todo in board constructor?
+            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//todo howto in board constructor?
             do {
                 this.show();
-                this.turnView.nextTurn();//todo es un poco raro aquí...
+                this.turnView.nextTurn();
                 console.write("\nTurn " + this.turnView.getColor());
                 let inputColumn;
                 do {
@@ -106,11 +106,11 @@ function board() {
         isOnLineTokens: function () {
             const IN_LINE = 4;
             let onLineTokens = false;
-            for (const property in colors()) {
-                onLineTokens ||= this.isHorizontal(property, IN_LINE);
-                onLineTokens ||= this.isVertical(property, IN_LINE); 
-                onLineTokens ||= this.isDiagonal(property, IN_LINE);
-                onLineTokens ||= this.isReverseDiagonal(property, IN_LINE);
+            for (const color in colors()) {
+                onLineTokens ||= this.isHorizontal(color, IN_LINE);
+                onLineTokens ||= this.isVertical(color, IN_LINE); 
+                onLineTokens ||= this.isDiagonal(color, IN_LINE);
+                onLineTokens ||= this.isReverseDiagonal(color, IN_LINE);
               }
               return onLineTokens;
         },
@@ -134,8 +134,9 @@ function board() {
         },
         isVertical: function (color, inlineNumberOfTokens) { //repeated code and magic numbers
             let counterPositions = 0;
-            for (let i = 0; i < 7; i++) {
+            for (let i = 0; i < 6; i++) {
                 let row = this.getFirstEmptyRowFromColumn(i);
+                console.writeln(row);
                 for (let j = row; j < 5; j++) {
                     if (this.tokens[j + 1][i].getColor() === color) {
                         counterPositions++;
@@ -235,7 +236,7 @@ function board() {
         },
         getTokens: function () {
             return this.tokens;
-        },
+        }
     }
 }
 
@@ -278,19 +279,6 @@ function turn() {
                 this.color = colors().Red;
             }
         }
-    }
-}
-
-function coordinate(row, column) {//todo dead code
-    return {
-        row: row,
-        column: column,
-        getRow: function () {
-            return this.row;
-        },
-        getColumn: function () {
-            return this.column;
-        },
     }
 }
 

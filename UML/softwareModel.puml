@@ -14,11 +14,15 @@ class Board{
     + reset(maxRows, maxColumns)
     + isFilledColumn(column)
     + putToken(column, color)
-    + getNextEmptyRow(column)
+    + getFirstEmptyRowFromColumn(column)
     + isEndGame()
     + isFilled()
-    + isFourInLine()
-    - isHorizontal(color)
+    + isOnLineTokens()
+    - isInLineHorizontal(color, inlineNumberOfTokens)
+    - isInLineVertical(color, inlineNumberOfTokens)
+    - isInLineDiagonal(color, inlineNumberOfTokens)
+    - isInLineReverseDiagonal(color, inlineNumberOfTokens)
+    - isColorOnPosition(row, column, color)
     + getTokens()
 }
 class BoardView{

@@ -148,13 +148,11 @@ function board() {
             }
             return false;
         },
-        isColorOnPosition(row, column, color){
-            return typeof(this.tokens[row][column]) === 'object' && this.tokens[row][column].getColor() === color;
-        },
         isDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
             let row = 6;
             let column = 0;
+            let inLine = false;
             for (let i = 0; i < 6; i++) { 
                 for (let j = i; j < 6; j++) {
                     if(this.isColorOnPosition(--row, column++, color)){
@@ -162,9 +160,7 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    if (counterColors === inlineNumberOfTokens) {
-                        return true;
-                    }
+                    inLine ||= counterColors === inlineNumberOfTokens;
                 }
                 row = 5 - i;
                 column = 0;
@@ -179,20 +175,19 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    if (counterColors === inlineNumberOfTokens) {
-                        return true;
-                    }
+                    inLine ||= counterColors === inlineNumberOfTokens;
                 }
                 row = 1 + i;
                 column = 6;
                 counterColors = 0;
             }
-            return false;
+            return inLine;
         },
         isReverseDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
             row = 0;
             column = 0;
+            let inLine = false;
             for (let i = 0; i < 6; i++) { 
                 for (let j = i; j < 6; j++) {
                     if(this.isColorOnPosition(row++, column++, color)){
@@ -200,9 +195,7 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    if (counterColors === inlineNumberOfTokens) {
-                        return true;
-                    }
+                    inLine ||= counterColors === inlineNumberOfTokens;
                 }
                 row = 1 + i;
                 column = 0;
@@ -217,15 +210,16 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    if (counterColors === inlineNumberOfTokens) {
-                        return true;
-                    }
+                    inLine ||= counterColors === inlineNumberOfTokens;
                 }
                 row = 5 - i;
                 column = 6;
                 counterColors = 0;
             }
-            return false;
+            return inLine;
+        },
+        isColorOnPosition(row, column, color){
+            return typeof(this.tokens[row][column]) === 'object' && this.tokens[row][column].getColor() === color;
         },
         getTokens: function () {
             return this.tokens;
@@ -282,7 +276,7 @@ function token(color) {//todo innecesary class?
     }
 }
 
-function colors() { //todo howto make enum?
+function colors() { //todo howto enum?
     return {
         Red: "Red",
         Yellow: "Yellow",

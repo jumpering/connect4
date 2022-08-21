@@ -183,8 +183,8 @@ function board() {
         },
         isInLineReverseDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
-            row = 0;
-            column = 0;
+            let row = 0;
+            let column = 0;
             let inLine = false;
             for (let i = 0; i < 6; i++) { 
                 for (let j = i; j < 6; j++) {

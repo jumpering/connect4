@@ -107,15 +107,16 @@ function board() {
             const IN_LINE = 4;
             let onLineTokens = false;
             for (const color in colors()) {
-                onLineTokens ||= this.isHorizontal(color, IN_LINE);
-                onLineTokens ||= this.isVertical(color, IN_LINE); 
-                onLineTokens ||= this.isDiagonal(color, IN_LINE);
-                onLineTokens ||= this.isReverseDiagonal(color, IN_LINE);
+                onLineTokens ||= this.isInLineHorizontal(color, IN_LINE);
+                onLineTokens ||= this.isInLineVertical(color, IN_LINE); 
+                onLineTokens ||= this.isInLineDiagonal(color, IN_LINE);
+                onLineTokens ||= this.isInLineReverseDiagonal(color, IN_LINE);
               }
               return onLineTokens;
         },
-        isHorizontal: function (color, inlineNumberOfTokens) { //repeated code
+        isInLineHorizontal: function (color, inlineNumberOfTokens) { //repeated code
             let counterColors = 0;
+            let inLine = false;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
                     if (this.isColorOnPosition(i, j, color)){
@@ -123,16 +124,15 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    if (counterColors === inlineNumberOfTokens) {
-                        return true;
-                    }
+                    inLine ||= counterColors === inlineNumberOfTokens;
                 }
                 counterColors = 0;
             }
-            return false;
+            return inLine;
         },
-        isVertical: function (color, inlineNumberOfTokens) { //repeated code
+        isInLineVertical: function (color, inlineNumberOfTokens) { //repeated code
             let counterColors = 0;
+            let inLine = false;
             for (let i = 0; i < this.tokens[0].length; i++) {
                 for (let j = 0; j < this.tokens.length; j++) {
                     if (this.isColorOnPosition(j, i, color)){
@@ -140,15 +140,13 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    if (counterColors === inlineNumberOfTokens) {
-                        return true;
-                    }
+                    inLine ||= counterColors === inlineNumberOfTokens;
                 }
                 counterColors = 0;
             }
-            return false;
+            return inLine;
         },
-        isDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
+        isInLineDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
             let row = 6;
             let column = 0;
@@ -183,7 +181,7 @@ function board() {
             }
             return inLine;
         },
-        isReverseDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
+        isInLineReverseDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
             row = 0;
             column = 0;

@@ -78,6 +78,9 @@ function board() {
         isFilledColumn: function (column) {
             return typeof (this.tokens[0][column]) === 'object';
         },
+        isEmptyColumn: function (column) {//todo dead code
+            return typeof (this.tokens[5][column]) === 'undefined';
+        },
         putToken: function (column, color) {
             let emptyRow = this.getFirstEmptyRowFromColumn(column);
             this.tokens[emptyRow][column] = token(color);
@@ -86,7 +89,7 @@ function board() {
             for (let i = this.tokens.length - 1; i >= 0; i--) {
                 if (typeof (this.tokens[i][column]) === 'undefined') {
                     return i;
-                }
+                } 
             }
         },
         isEndGame: function () {
@@ -114,43 +117,38 @@ function board() {
               }
               return onLineTokens;
         },
-        isHorizontal: function (color, inlineNumberOfTokens) { //repeated code and magic numbers
-            let counterPositions = 0;
+        isHorizontal: function (color, inlineNumberOfTokens) { //repeated code
+            let counterColors = 0;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
-                    if (typeof (this.tokens[i][j]) === 'object' && this.tokens[i][j].getColor() === color) {
-                        counterPositions++;
+                    if (this.isColorOnPosition(i, j, color)){
+                        counterColors++;
                     }
-                    if (typeof (this.tokens[i][j]) === 'undefined' || this.tokens[i][j].getColor() !== color) {
-                        counterPositions = 0;
-                    }
-                    if (counterPositions === inlineNumberOfTokens) {
+                    if (counterColors === inlineNumberOfTokens) {
                         return true;
                     }
                 }
-                counterPositions = 0;
+                counterColors = 0;
             }
             return false;
         },
-        isVertical: function (color, inlineNumberOfTokens) { //repeated code and magic numbers
-            let counterPositions = 0;
-            for (let i = 0; i < 6; i++) {
-                let row = this.getFirstEmptyRowFromColumn(i);
-                console.writeln(row);
-                for (let j = row; j < 5; j++) {
-                    if (this.tokens[j + 1][i].getColor() === color) {
-                        counterPositions++;
+        isVertical: function (color, inlineNumberOfTokens) { //repeated code
+            let counterColors = 0;
+            for (let i = 0; i < this.tokens[0].length; i++) {
+                for (let j = 0; j < this.tokens.length; j++) {
+                    if (this.isColorOnPosition(j, i, color)){
+                        counterColors++;
                     }
-                    if (this.tokens[j + 1][i].getColor() !== color) {
-                        counterPositions = 0;
-                    }
-                    if (counterPositions === inlineNumberOfTokens) {
+                    if (counterColors === inlineNumberOfTokens) {
                         return true;
                     }
                 }
-                counterPositions = 0;
+                counterColors = 0;
             }
             return false;
+        },
+        isColorOnPosition(row, column, color){ //todo to many arguments? coordinates only in this method
+            return typeof(this.tokens[row][column]) === 'object' && this.tokens[row][column].getColor() === color;
         },
         isDiagonal: function (color,inlineNumberOfTokens) { //repeated code and magic numbers
             let counterPositions = 0;
@@ -191,7 +189,7 @@ function board() {
             }
             return false;
         },
-        isReverseDiagonal: function (color,inlineNumberOfTokens) {
+        isReverseDiagonal: function (color,inlineNumberOfTokens) { //repeated code and magic numbers
             let counterPositions = 0;
             let counterColors = 0;
             for (let i = 0; i <= counterPositions, counterPositions < 6; i++) {

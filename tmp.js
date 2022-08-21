@@ -1,6 +1,6 @@
 let acomulador = false;
-acomulador ||= true;
 acomulador ||= false;
+
 
 
 console.log(acomulador);

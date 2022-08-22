@@ -90,7 +90,7 @@ function board() {
             }
         },
         isEndGame: function () {
-            return this.isFilled() || this.isOnLineTokens();
+            return this.isFilled() || this.isInLineTokens();
         },
         isFilled: function () {
             let countTokens = 0;
@@ -103,7 +103,7 @@ function board() {
             }
             return countTokens === this.tokens.length * this.tokens[0].length;
         },
-        isOnLineTokens: function () {
+        isInLineTokens: function () {
             const IN_LINE = 4;
             let onLineTokens = false;
             for (const color in colors()) {

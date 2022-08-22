@@ -86,7 +86,7 @@ function board() {
             for (let i = this.tokens.length - 1; i >= 0; i--) {
                 if (typeof (this.tokens[i][column]) === 'undefined') {
                     return i;
-                } 
+                }
             }
         },
         isEndGame: function () {
@@ -108,18 +108,18 @@ function board() {
             let onLineTokens = false;
             for (const color in colors()) {
                 onLineTokens ||= this.isInLineHorizontal(color, IN_LINE);
-                onLineTokens ||= this.isInLineVertical(color, IN_LINE); 
+                onLineTokens ||= this.isInLineVertical(color, IN_LINE);
                 onLineTokens ||= this.isInLineDiagonal(color, IN_LINE);
                 onLineTokens ||= this.isInLineReverseDiagonal(color, IN_LINE);
-              }
-              return onLineTokens;
+            }
+            return onLineTokens;
         },
         isInLineHorizontal: function (color, inlineNumberOfTokens) { //repeated code
             let counterColors = 0;
             let inLine = false;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
-                    if (this.isColorOnPosition(i, j, color)){
+                    if (this.isColorOnPosition(i, j, color)) {
                         counterColors++;
                     } else {
                         counterColors = 0;
@@ -135,7 +135,7 @@ function board() {
             let inLine = false;
             for (let i = 0; i < this.tokens[0].length; i++) {
                 for (let j = 0; j < this.tokens.length; j++) {
-                    if (this.isColorOnPosition(j, i, color)){
+                    if (this.isColorOnPosition(j, i, color)) {
                         counterColors++;
                     } else {
                         counterColors = 0;
@@ -146,78 +146,58 @@ function board() {
             }
             return inLine;
         },
-        isInLineDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
+        isInLineDiagonal: function (color, inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
-            let row = 6;
-            let column = 0;
             let inLine = false;
-            for (let i = 0; i < 6; i++) { 
+            for (let i = 0, row = 6, column = 0; i < 6; i++, row = 6 - i, column = 0, counterColors = 0) {
                 for (let j = i; j < 6; j++) {
-                    if(this.isColorOnPosition(--row, column++, color)){
+                    if (this.isColorOnPosition(--row, column++, color)) {
                         counterColors++;
                     } else {
                         counterColors = 0;
                     }
                     inLine ||= counterColors === inlineNumberOfTokens;
                 }
-                row = 5 - i;
-                column = 0;
-                counterColors = 0;
             }
-            row = 0;
-            column = 6;
-            for (let i = 0; i < 6; i++) { 
+            for (let i = 0, row = 0, column = 6; i < 6; i++, row = 0 + i, column = 6) {
                 for (let j = i; j < 6; j++) {
-                    if(this.isColorOnPosition(row++, column--, color)){
+                    if (this.isColorOnPosition(row++, column--, color)) {
                         counterColors++;
                     } else {
                         counterColors = 0;
                     }
                     inLine ||= counterColors === inlineNumberOfTokens;
                 }
-                row = 1 + i;
-                column = 6;
-                counterColors = 0;
             }
             return inLine;
         },
-        isInLineReverseDiagonal: function (color,inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
+        isInLineReverseDiagonal: function (color, inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
-            let row = 0;
-            let column = 0;
             let inLine = false;
-            for (let i = 0; i < 6; i++) { 
+            for (let i = 0, row = 0, column = 0; i < 6; i++, row = 0 + i, column = 0, counterColors = 0) {
                 for (let j = i; j < 6; j++) {
-                    if(this.isColorOnPosition(row++, column++, color)){
+                    if (this.isColorOnPosition(row++, column++, color)) {
                         counterColors++;
                     } else {
                         counterColors = 0;
                     }
                     inLine ||= counterColors === inlineNumberOfTokens;
                 }
-                row = 1 + i;
-                column = 0;
-                counterColors = 0;
             }
-            row = 6;
-            column = 6;
-            for (let i = 0; i < 6; i++) { 
+            for (let i = 0, row = 6, column = 6; i < 6; i++, row = 6 - i, column = 6, counterColors = 0) {
                 for (let j = i; j < 6; j++) {
-                    if(this.isColorOnPosition(--row, column--, color)){
+                    if (this.isColorOnPosition(--row, column--, color)) {
                         counterColors++;
                     } else {
                         counterColors = 0;
                     }
                     inLine ||= counterColors === inlineNumberOfTokens;
                 }
-                row = 5 - i;
-                column = 6;
-                counterColors = 0;
             }
             return inLine;
         },
-        isColorOnPosition(row, column, color){
-            return typeof(this.tokens[row][column]) === 'object' && this.tokens[row][column].getColor() === color;
+        isColorOnPosition(row, column, color) {
+            return typeof (this.tokens[row][column]) === 'object' && this.tokens[row][column].getColor() === color;
         },
         getTokens: function () {
             return this.tokens;

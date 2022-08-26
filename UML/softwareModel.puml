@@ -11,6 +11,7 @@ class YesNoDialogView{
 }
 class Board{
     - tokens[]
+    - inLine
     + reset(maxRows, maxColumns)
     + isFilledColumn(column)
     + putToken(column, color)
@@ -18,11 +19,6 @@ class Board{
     + isEndGame()
     + isFilled()
     + isInLineTokens()
-    - isInLineHorizontal(color, inlineNumberOfTokens)
-    - isInLineVertical(color, inlineNumberOfTokens)
-    - isInLineDiagonal(color, inlineNumberOfTokens)
-    - isInLineReverseDiagonal(color, inlineNumberOfTokens)
-    - isColorOnPosition(row, column, color)
     + getTokens()
 }
 class BoardView{
@@ -33,12 +29,17 @@ class BoardView{
     + init()
     + show()
 }
-class Coordinate{
-    - row
-    - column
-    + getRow()
-    + getColumn()
+class inLine{
+    - tokens
+    - IN_LINE_NUMBER_OF_TOKENS
+    + isInLineTokens(tokens)
+    - isInLineHorizontal(color, inlineNumberOfTokens)
+    - isInLineVertical(color, inlineNumberOfTokens)
+    - isInLineDiagonal(color, inlineNumberOfTokens)
+    - isInLineReverseDiagonal(color, inlineNumberOfTokens)
+    - isColorOnPosition(row, column, color)
 }
+
 class Token{
     - Color
     + getColor()
@@ -69,10 +70,12 @@ BoardView ..> TurnView
 TurnView o--> Turn
 
 Board o--> Token
+Board o--> inLine
+
+inLine ..> Colors
 
 Turn ..> Token
 
 
 Token *--> Colors
-Token ..> Coordinate
 @enduml

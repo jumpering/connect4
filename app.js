@@ -10,7 +10,7 @@ function connect4() {
         playGame: function () {
             do {
                 this.boardView.init();
-                this.yesNoDialog.read("Play again?");
+                this.yesNoDialog.read("Play again? (yes/no)");
             } while (this.yesNoDialog.isAffirmative());
         }
     }
@@ -20,7 +20,7 @@ function boardView() {
     return {
         MAX_ROWS: 6,
         MAX_COLUMNS: 7,
-        board: board(),
+        board: board(this.MAX_ROWS, this.MAX_COLUMNS),
         turnView: turnView(),
         init: function () {
             console.writeln("\n      Connect4\n");
@@ -69,11 +69,13 @@ function boardView() {
 function board() {
     return {
         tokens: [],
+        inLine: undefined,
         reset: function (maxRows, maxColumns) {
-            this.tokens = new Array(maxRows)
+            this.tokens = new Array(maxRows);
             for (let i = 0; i < maxRows; i++) {
                 this.tokens[i] = new Array(maxColumns);
             }
+            this.inLine = inLine();
         },
         isFilledColumn: function (column) {
             return typeof (this.tokens[0][column]) === 'object';
@@ -104,17 +106,31 @@ function board() {
             return countTokens === this.tokens.length * this.tokens[0].length;
         },
         isInLineTokens: function () {
-            const IN_LINE = 4;
-            let onLineTokens = false;
-            for (const color in colors()) {
-                onLineTokens ||= this.isInLineHorizontal(color, IN_LINE);
-                onLineTokens ||= this.isInLineVertical(color, IN_LINE);
-                onLineTokens ||= this.isInLineDiagonal(color, IN_LINE);
-                onLineTokens ||= this.isInLineReverseDiagonal(color, IN_LINE);
-            }
-            return onLineTokens;
+            return this.inLine.isInLineTokens(this.tokens);
         },
-        isInLineHorizontal: function (color, inlineNumberOfTokens) { //repeated code
+        getTokens: function () {
+            return this.tokens;
+        }
+    }
+}
+
+function inLine(){
+    return{
+        IN_LINE_NUMBER_OF_TOKENS: 4,
+        tokens: [],
+        isInLineTokens: function (tokens) {
+            const IN_LINE = 4;
+            this.tokens = tokens;
+            let inLineTokens = false;
+            for (const color in colors()) {
+                inLineTokens ||= this.isInLineHorizontal(color);
+                inLineTokens ||= this.isInLineVertical(color);
+                inLineTokens ||= this.isInLineDiagonal(color);
+                inLineTokens ||= this.isInLineReverseDiagonal(color);
+            }
+            return inLineTokens;
+        },
+        isInLineHorizontal: function (color) { //repeated code
             let counterColors = 0;
             let inLine = false;
             for (let i = 0; i < this.tokens.length; i++) {
@@ -124,13 +140,13 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    inLine ||= counterColors === inlineNumberOfTokens;
+                    inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
                 }
                 counterColors = 0;
             }
             return inLine;
         },
-        isInLineVertical: function (color, inlineNumberOfTokens) { //repeated code
+        isInLineVertical: function (color) { //repeated code
             let counterColors = 0;
             let inLine = false;
             for (let i = 0; i < this.tokens[0].length; i++) {
@@ -140,13 +156,13 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    inLine ||= counterColors === inlineNumberOfTokens;
+                    inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
                 }
                 counterColors = 0;
             }
             return inLine;
         },
-        isInLineDiagonal: function (color, inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
+        isInLineDiagonal: function (color) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
             let inLine = false;
             for (let i = 0, row = 6, column = 0; i < 6; i++, row = 6 - i, column = 0, counterColors = 0) {
@@ -156,7 +172,7 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    inLine ||= counterColors === inlineNumberOfTokens;
+                    inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
                 }
             }
             for (let i = 0, row = 0, column = 6; i < 6; i++, row = 0 + i, column = 6) {
@@ -166,12 +182,12 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    inLine ||= counterColors === inlineNumberOfTokens;
+                    inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
                 }
             }
             return inLine;
         },
-        isInLineReverseDiagonal: function (color, inlineNumberOfTokens) { //todo repeated code, magic numbers, hardcoded
+        isInLineReverseDiagonal: function (color) { //todo repeated code, magic numbers, hardcoded
             let counterColors = 0;
             let inLine = false;
             for (let i = 0, row = 0, column = 0; i < 6; i++, row = 0 + i, column = 0, counterColors = 0) {
@@ -181,7 +197,7 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    inLine ||= counterColors === inlineNumberOfTokens;
+                    inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
                 }
             }
             for (let i = 0, row = 6, column = 6; i < 6; i++, row = 6 - i, column = 6, counterColors = 0) {
@@ -191,17 +207,14 @@ function board() {
                     } else {
                         counterColors = 0;
                     }
-                    inLine ||= counterColors === inlineNumberOfTokens;
+                    inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
                 }
             }
             return inLine;
         },
         isColorOnPosition(row, column, color) {
             return typeof (this.tokens[row][column]) === 'object' && this.tokens[row][column].getColor() === color;
-        },
-        getTokens: function () {
-            return this.tokens;
-        }
+        }, 
     }
 }
 

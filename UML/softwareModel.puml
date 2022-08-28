@@ -74,10 +74,6 @@ Red
 Yellow
 }
 
-class messages{
-
-}
-
 connect4 ..> boardView
 connect4 ..> yesNoDialog
 boardView *--> board

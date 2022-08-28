@@ -1,27 +1,28 @@
 @startuml
 
-class Connect4{
+class connect4{
     - boardView
     - yesNoDialog
     + playGame()
 }
-class YesNoDialogView{
+class yesNoDialogView{
     + read(message)
     + isAffirmative()
 }
-class Board{
+class board{
     - tokens[]
     - inLine
+    - lastToken
     + reset(maxRows, maxColumns)
     + isFilledColumn(column)
     + putToken(column, color)
     + getFirstEmptyRowFromColumn(column)
     + isEndGame()
     + isFilled()
-    + isInLineTokens(tokens)
+    + isInLineToken(tokens[])
     + getTokens()
 }
-class BoardView{
+class boardView{
     - MAX_ROWS
     - MAX_COLUMNS
     - Board
@@ -32,50 +33,57 @@ class BoardView{
 class inLine{
     - tokens
     - IN_LINE_NUMBER_OF_TOKENS
-    + isInLineTokens(tokens)
-    - isInLineHorizontal(color, inlineNumberOfTokens)
-    - isInLineVertical(color, inlineNumberOfTokens)
-    - isInLineDiagonal(color, inlineNumberOfTokens)
-    - isInLineReverseDiagonal(color, inlineNumberOfTokens)
-    - isColorOnPosition(row, column, color)
+    + isInLineToken(tokens[], token)
+    - isInLineHorizontal(token)
+    - isInLineVertical(token)
+    - isInLineDiagonal(token)
+    - isInLineReverseDiagonal(token)
+    - isColorOnPosition(token)
 }
 
-class Token{
+class token{
     - Color
+    - coordinate
     + getColor()
+    + getRow()
+    + getColumn()
 }
-class TurnView{
+
+class coordinate {
+    - row 
+    - column
+    + getRow()
+    + getColumn()
+}
+
+class turnView{
     - turn
     + getColumn(maxColumns)
     + nextTurn()
     + getColor()
 }
 
-class Turn{
+class turn{
     - color
     + getColor()
     + nextTurn()
 }
 
-enum Colors{
+enum colors{
 Red
 Yellow
 }
 
-Connect4 ..> BoardView
-Connect4 ..> YesNoDialogView
-
-BoardView *--> Board
-BoardView ..> TurnView
-TurnView o--> Turn
-
-Board o--> Token
-Board o--> inLine
-
-inLine ..> Colors
-
-Turn ..> Token
-
-
-Token *--> Colors
+connect4 ..> boardView
+connect4 ..> yesNoDialogView
+boardView *--> board
+boardView ..> turnView
+turnView o--> turn
+board o--> token
+board o--> inLine
+board ..> coordinate
+inLine ..> colors
+turn o--> colors
+token *--> colors
+token *--> coordinate
 @enduml

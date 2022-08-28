@@ -10,7 +10,7 @@ function connect4() {
         playGame: function () {
             do {
                 this.boardView.init();
-                this.yesNoDialog.read("Play again? (yes/no)");
+                this.yesNoDialog.read(messages().PLAY_AGAIN);
             } while (this.yesNoDialog.isAffirmative());
         }
     }
@@ -23,16 +23,16 @@ function boardView() {
         board: board(),
         turnView: turnView(),
         init: function () {
-            console.writeln("\n      Connect4\n");
+            console.writeln(messages().TITLE);
             this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//todo howto in board constructor?
             do {
                 this.show();
-                console.write("\nTurn " + this.turnView.getColor());
+                console.write(messages().TURN_BY + this.turnView.getColor());
                 let inputColumn;
                 do {
                     inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
                     if (this.board.isFilledColumn(inputColumn)) {
-                        console.writeln("This column has not empty holes, select another column");
+                        console.writeln(messages().COLUMN_NOT_EMPTY);
                     }
                 } while (this.board.isFilledColumn(inputColumn));
                 this.board.putToken(inputColumn, this.turnView.getColor());
@@ -40,23 +40,22 @@ function boardView() {
             } while (!this.board.isEndGame());
             this.show();
             this.turnView.nextTurn();
-            console.writeln(this.board.isFilled() === true ? "Game over" : "Player " + this.turnView.getColor() + " win!");
+            console.writeln(this.board.isFilled() === true ? messages().GAME_OVER : messages().PLAYER + this.turnView.getColor() + messages().WIN);
         },
         show: function () {
             let tokens = this.board.getTokens();
-            console.writeln("\n 0  1  2  3  4  5  6");
-            console.writeln("--------------------");
+            console.writeln(messages().BOARD_HEADER);
             for (let i = 0; i < tokens.length; i++) {
                 for (let j = 0; j < tokens[i].length; j++) {
                     if (typeof (tokens[i][j]) === 'undefined') {
-                        console.write(" · ");
+                        console.write(messages().BOARD_HOLE);
                     }
                     if (typeof (tokens[i][j]) === 'object') {
                         if (tokens[i][j].getColor() === colors().Red) {
-                            console.write(" R ");
+                            console.write(messages().BOARD_RED);
                         }
                         if (tokens[i][j].getColor() === colors().Yellow) {
-                            console.write(" Y ");
+                            console.write(messages().BOARD_YELLOW);
                         }
                     }
                 }
@@ -189,10 +188,10 @@ function turnView() {
             let column = 0;
             let error = true;
             do {
-                column = console.readNumber(" insert column: ");
+                column = console.readNumber(messages().INSERT_COLUMN);
                 error = column < 0 || column >= maxColumns;
                 if (error) {
-                    console.writeln("Insert value between 0 and " + (maxColumns - 1));
+                    console.writeln(messages().INSERT_VALUES_BETWEEN + (maxColumns - 1));
                 }
             } while (error);
             return column;
@@ -253,15 +252,15 @@ function token(coordinate, color) {//todo innecesary class?
 
 function colors() { //todo howto enum?
     return {
-        Red: "Red",
-        Yellow: "Yellow",
+        Red: messages().RED,
+        Yellow: messages().YELLOW,
     }
 }
 
 function yesNoDialog() {
     return {
-        YES: "yes",
-        NO: "no",
+        YES: messages().YES,
+        NO: messages().NO,
         response: "",
         error: true,
         read: function (message) {
@@ -269,7 +268,7 @@ function yesNoDialog() {
                 this.response = console.readString(message);
                 this.error = this.response != this.YES && this.response != this.NO;
                 if (this.error) {
-                    console.writeln("Response must be " + this.YES + " or " + this.NO);
+                    console.writeln(messages().RESPONSE_MUST_BE + this.YES + messages().OR + this.NO);
                 }
             } while (this.error);
             return this.response;
@@ -280,105 +279,26 @@ function yesNoDialog() {
     }
 }
 
-// function inLine() { //version analiza todo el board
-//     return {
-//         IN_LINE_NUMBER_OF_TOKENS: 4,
-//         tokens: [],
-//         isInLineTokens: function (tokens) {
-//             this.tokens = tokens;
-//             let inLineTokens = false;
-//             for (const color in colors()) {
-//                 inLineTokens ||= this.isInLineHorizontal(color);
-//                 inLineTokens ||= this.isInLineVertical(color);
-//                 inLineTokens ||= this.isInLineDiagonal(color);
-//                 inLineTokens ||= this.isInLineReverseDiagonal(color);
-//             }
-//             return inLineTokens;
-//         },
-//         isInLineHorizontal: function (color) { //repeated code
-//             let counterColors = 0;
-//             let inLine = false;
-//             for (let i = 0; i < this.tokens.length; i++) {
-//                 for (let j = 0; j < this.tokens[i].length; j++) {
-//                     if (this.isColorOnPosition(i, j, color)) {
-//                         counterColors++;
-//                     } else {
-//                         counterColors = 0;
-//                     }
-//                     inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-//                 }
-//                 counterColors = 0;
-//             }
-//             return inLine;
-//         },
-//         isInLineVertical: function (color) { //repeated code
-//             let counterColors = 0;
-//             let inLine = false;
-//             for (let i = 0; i < this.tokens[0].length; i++) {
-//                 for (let j = 0; j < this.tokens.length; j++) {
-//                     if (this.isColorOnPosition(j, i, color)) {
-//                         counterColors++;
-//                     } else {
-//                         counterColors = 0;
-//                     }
-//                     inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-//                 }
-//                 counterColors = 0;
-//             }
-//             return inLine;
-//         },
-//         isInLineDiagonal: function (color) { //todo repeated code, magic numbers, hardcoded
-//             let counterColors = 0;
-//             let inLine = false;
-//             for (let i = 0, row = 6, column = 0; i < 6; i++, row = 6 - i, column = 0, counterColors = 0) {
-//                 for (let j = i; j < 6; j++) {
-//                     if (this.isColorOnPosition(--row, column++, color)) {
-//                         counterColors++;
-//                     } else {
-//                         counterColors = 0;
-//                     }
-//                     inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-//                 }
-//             }
-//             for (let i = 0, row = 0, column = 6; i < 6; i++, row = 0 + i, column = 6) {
-//                 for (let j = i; j < 6; j++) {
-//                     if (this.isColorOnPosition(row++, column--, color)) {
-//                         counterColors++;
-//                     } else {
-//                         counterColors = 0;
-//                     }
-//                     inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-//                 }
-//             }
-//             return inLine;
-//         },
-//         isInLineReverseDiagonal: function (color) { //todo repeated code, magic numbers, hardcoded
-//             let counterColors = 0;
-//             let inLine = false;
-//             for (let i = 0, row = 0, column = 0; i < 6; i++, row = 0 + i, column = 0, counterColors = 0) {
-//                 for (let j = i; j < 6; j++) {
-//                     if (this.isColorOnPosition(row++, column++, color)) {
-//                         counterColors++;
-//                     } else {
-//                         counterColors = 0;
-//                     }
-//                     inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-//                 }
-//             }
-//             for (let i = 0, row = 6, column = 6; i < 6; i++, row = 6 - i, column = 6, counterColors = 0) {
-//                 for (let j = i; j < 6; j++) {
-//                     if (this.isColorOnPosition(--row, column--, color)) {
-//                         counterColors++;
-//                     } else {
-//                         counterColors = 0;
-//                     }
-//                     inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-//                 }
-//             }
-//             return inLine;
-//         },
-//         isColorOnPosition(row, column, color) {
-//             return typeof (this.tokens[row][column]) === 'object' && this.tokens[row][column].getColor() === color;
-//         },
-//     }
-// }
+function messages(){
+    return{
+        TITLE: "\n      Connect4\n",
+        TURN_BY: "\nTurn ",
+        COLUMN_NOT_EMPTY: "This column has not empty holes, select another column",
+        INSERT_COLUMN: " insert column: ",
+        GAME_OVER: "Game over",
+        PLAYER: "Player ",
+        WIN: " win!",
+        BOARD_HEADER: "\n 0  1  2  3  4  5  6\n -------------------",
+        BOARD_HOLE: " · ",
+        BOARD_RED: " R ",
+        BOARD_YELLOW: " Y ",
+        INSERT_VALUES_BETWEEN: "Insert value between 0 and ",
+        PLAY_AGAIN: "Play again? (yes/no)",
+        YES: "yes",
+        NO: "no",
+        RESPONSE_MUST_BE: "Response must be ",
+        OR: " or ",
+        RED: "Red",
+        YELLOW: "Yellow"
+    }
+}

@@ -187,7 +187,6 @@ function inLineChecker() {
                     }
                 }
                 inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-                console.writeln(inLine);
             }
             return inLine;
         },

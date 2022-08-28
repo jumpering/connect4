@@ -155,27 +155,40 @@ function inLineChecker() {
             return inLine;
         },
         isInLineDiagonal: function (token) { //todo repeated code, only works to right
-        let counterColors = 0;
-        let inLine = false;
-        let row = token.getRow();
-        let column = token.getColumn();
-        let color = token.getColor();
-         for (let i = 0; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
-            if((row + i) >= 0 && (row + i) < 6 && (column - i) >= 0 && (column - i) < 7){
-                if(typeof (this.tokens[row + i][column - i]) === 'object' && this.tokens[row + i][column - i].getColor() === color){
-                    counterColors++;
-                } else {
-                    counterColors = 0;
+            let counterColors = 0;
+            let inLine = false;
+            let row = token.getRow();
+            let column = token.getColumn();
+            let color = token.getColor();
+            for (let i = 0; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
+                if ((row + i) >= 0 && (row + i) < 6 && (column - i) >= 0 && (column - i) < 7) {
+                    if (typeof (this.tokens[row + i][column - i]) === 'object' && this.tokens[row + i][column - i].getColor() === color) {
+                        counterColors++;
+                    } else {
+                        counterColors = 0;
+                    }
                 }
-            }
-            inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;   
+                inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
             }
             return inLine;
         },
-        isInLineReverseDiagonal: function (token) { //todo
+        isInLineReverseDiagonal: function (token) { //todo repeated code, only works to right
             let counterColors = 0;
             let inLine = false;
-
+            let row = token.getRow();
+            let column = token.getColumn();
+            let color = token.getColor();
+            for (let i = 0; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
+                if ((row + i) >= 0 && (row + i) < 6 && (column + i) >= 0 && (column + i) < 7) {
+                    if (typeof (this.tokens[row + i][column + i]) === 'object' && this.tokens[row + i][column + i].getColor() === color) {
+                        counterColors++;
+                    } else {
+                        counterColors = 0;
+                    }
+                }
+                inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
+                console.writeln(inLine);
+            }
             return inLine;
         },
     }
@@ -279,8 +292,8 @@ function yesNoDialog() {
     }
 }
 
-function messages(){
-    return{
+function messages() {
+    return {
         TITLE: "\n      Connect4\n",
         TURN_BY: "\nTurn ",
         COLUMN_NOT_EMPTY: "This column has not empty holes, select another column",

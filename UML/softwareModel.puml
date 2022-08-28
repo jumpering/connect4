@@ -5,7 +5,7 @@ class connect4{
     - yesNoDialog
     + playGame()
 }
-class yesNoDialogView{
+class yesNoDialog{
     + read(message)
     + isAffirmative()
 }
@@ -74,8 +74,12 @@ Red
 Yellow
 }
 
+class messages{
+
+}
+
 connect4 ..> boardView
-connect4 ..> yesNoDialogView
+connect4 ..> yesNoDialog
 boardView *--> board
 boardView ..> turnView
 turnView o--> turn

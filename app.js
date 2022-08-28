@@ -70,13 +70,13 @@ function board() {
     return {
         lastToken: undefined,
         tokens: [],
-        inLine: undefined,
+        inLineChecker: undefined,
         reset: function (maxRows, maxColumns) {
             this.tokens = new Array(maxRows);
             for (let i = 0; i < maxRows; i++) {
                 this.tokens[i] = new Array(maxColumns);
             }
-            this.inLine = inLine();
+            this.inLineChecker = inLineChecker();
         },
         isFilledColumn: function (column) {
             return typeof (this.tokens[0][column]) === 'object';
@@ -108,7 +108,7 @@ function board() {
             return countTokens === this.tokens.length * this.tokens[0].length;
         },
         isInLineToken: function (token) {
-            return this.inLine.isInLineToken(this.tokens, token);
+            return this.inLineChecker.isInLineToken(this.tokens, token);
         },
         getTokens: function () {
             return this.tokens;
@@ -116,7 +116,7 @@ function board() {
     }
 }
 
-function inLine() {
+function inLineChecker() {
     return {
         IN_LINE_NUMBER_OF_TOKENS: 4,
         tokens: [],

@@ -11,7 +11,7 @@ class yesNoDialogView{
 }
 class board{
     - tokens[]
-    - inLine
+    - inLineChecker
     - lastToken
     + reset(maxRows, maxColumns)
     + isFilledColumn(column)
@@ -30,7 +30,7 @@ class boardView{
     + init()
     + show()
 }
-class inLine{
+class inLineChecker{
     - tokens
     - IN_LINE_NUMBER_OF_TOKENS
     + isInLineToken(tokens[], token)
@@ -80,9 +80,9 @@ boardView *--> board
 boardView ..> turnView
 turnView o--> turn
 board o--> token
-board o--> inLine
+board o--> inLineChecker
 board ..> coordinate
-inLine ..> colors
+inLineChecker ..> colors
 turn o--> colors
 token *--> colors
 token *--> coordinate

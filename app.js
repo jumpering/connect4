@@ -227,13 +227,6 @@ function turn() {
             return this.color;
         },
         nextTurn: function () {
-            if (this.color === colors().Red) {
-                this.color = colors().Yellow;
-            } else {
-                this.color = colors().Red;
-            }
-        },
-        nextTurn: function () {
             this.color === colors().Red ? this.color = colors().Yellow : this.color = colors().Red;
         }
 

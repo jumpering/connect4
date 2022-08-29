@@ -204,7 +204,7 @@ function turnView() {
             let error = true;
             do {
                 column = console.readNumber(messages().INSERT_COLUMN);
-                error = column < 0 || column >= maxColumns;
+                error = column < 0 || column > maxColumns - 1;
                 if (error) {
                     console.writeln(messages().INSERT_VALUES_BETWEEN + (maxColumns - 1));
                 }

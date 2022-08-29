@@ -69,13 +69,12 @@ function board() {
     return {
         lastToken: undefined,
         tokens: [],
-        inLineChecker: undefined,
+        inLineChecker: inLineChecker(),
         reset: function (maxRows, maxColumns) {
             this.tokens = new Array(maxRows);
             for (let i = 0; i < maxRows; i++) {
                 this.tokens[i] = new Array(maxColumns);
             }
-            this.inLineChecker = inLineChecker();
         },
         isFilledColumn: function (column) {
             return typeof (this.tokens[0][column]) === 'object';

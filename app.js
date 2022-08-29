@@ -163,11 +163,8 @@ function inLineChecker() {
                 if ((row + i) >= 0 && (row + i) < 6 && (column - i) >= 0 && (column - i) < 7) {
                     if (typeof (this.tokens[row + i][column - i]) === 'object' && this.tokens[row + i][column - i].getColor() === color) {
                         counterColors++;
-                    } 
+                    }
                 }
-                inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-            }
-            for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
                 if ((row - i) >= 0 && (row - i) < 6 && (column + i) >= 0 && (column + i) < 7) {
                     if (typeof (this.tokens[row - i][column + i]) === 'object' && this.tokens[row - i][column + i].getColor() === color) {
                         counterColors++;
@@ -189,13 +186,10 @@ function inLineChecker() {
                         counterColors++;
                     }
                 }
-                inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
-            }
-            for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
                 if ((row - i) >= 0 && (row - i) < 6 && (column - i) >= 0 && (column - i) < 7) {
                     if (typeof (this.tokens[row - i][column - i]) === 'object' && this.tokens[row - i][column - i].getColor() === color) {
                         counterColors++;
-                    } 
+                    }
                 }
                 inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
             }

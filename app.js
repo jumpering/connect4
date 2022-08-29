@@ -232,7 +232,11 @@ function turn() {
             } else {
                 this.color = colors().Red;
             }
+        },
+        nextTurn: function () {
+            this.color === colors().Red ? this.color = colors().Yellow : this.color = colors().Red;
         }
+
     }
 }
 

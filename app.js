@@ -153,36 +153,56 @@ function inLineChecker() {
             }
             return inLine;
         },
-        isInLineDiagonal: function (token) { //todo repeated code, only works to right
-            let counterColors = 0;
+        isInLineDiagonal: function (token) { //todo repeated code, magic numbers
+            let counterColors = 1;
             let inLine = false;
             let row = token.getRow();
             let column = token.getColumn();
             let color = token.getColor();
-            for (let i = 0; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
+            for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
                 if ((row + i) >= 0 && (row + i) < 6 && (column - i) >= 0 && (column - i) < 7) {
                     if (typeof (this.tokens[row + i][column - i]) === 'object' && this.tokens[row + i][column - i].getColor() === color) {
                         counterColors++;
                     } else {
-                        counterColors = 0;
+                        i = this.IN_LINE_NUMBER_OF_TOKENS; //todo goto encubierto
+                    }
+                }
+                inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
+            }
+            for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
+                if ((row - i) >= 0 && (row - i) < 6 && (column + i) >= 0 && (column + i) < 7) {
+                    if (typeof (this.tokens[row - i][column + i]) === 'object' && this.tokens[row - i][column + i].getColor() === color) {
+                        counterColors++;
+                    } else {
+                        i = this.IN_LINE_NUMBER_OF_TOKENS; //todo goto encubierto
                     }
                 }
                 inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
             }
             return inLine;
         },
-        isInLineReverseDiagonal: function (token) { //todo repeated code, only works to right
-            let counterColors = 0;
+        isInLineReverseDiagonal: function (token) { //todo repeated code, not work fine
+            let counterColors = 1;
             let inLine = false;
             let row = token.getRow();
             let column = token.getColumn();
             let color = token.getColor();
-            for (let i = 0; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
+            for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
                 if ((row + i) >= 0 && (row + i) < 6 && (column + i) >= 0 && (column + i) < 7) {
                     if (typeof (this.tokens[row + i][column + i]) === 'object' && this.tokens[row + i][column + i].getColor() === color) {
                         counterColors++;
                     } else {
-                        counterColors = 0;
+                        i = this.IN_LINE_NUMBER_OF_TOKENS; //todo goto encubierto
+                    }
+                }
+                inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
+            }
+            for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
+                if ((row - i) >= 0 && (row - i) < 6 && (column - i) >= 0 && (column - i) < 7) {
+                    if (typeof (this.tokens[row - i][column - i]) === 'object' && this.tokens[row - i][column - i].getColor() === color) {
+                        counterColors++;
+                    } else {
+                        i = this.IN_LINE_NUMBER_OF_TOKENS; //todo goto encubierto
                     }
                 }
                 inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;

@@ -24,7 +24,7 @@ function boardView() {
         turnView: turnView(),
         init: function () {
             console.writeln(messages().TITLE);
-            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//todo maybe in board constructor?
+            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);
             do {
                 this.show();
                 console.write(messages().TURN_BY + this.turnView.getColor());

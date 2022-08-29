@@ -24,7 +24,7 @@ function boardView() {
         turnView: turnView(),
         init: function () {
             console.writeln(messages().TITLE);
-            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//todo howto in board constructor?
+            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);//todo maybe in board constructor?
             do {
                 this.show();
                 console.write(messages().TURN_BY + this.turnView.getColor());
@@ -181,7 +181,7 @@ function inLineChecker() {
             }
             return inLine;
         },
-        isInLineReverseDiagonal: function (token) { //todo repeated code, not work fine
+        isInLineReverseDiagonal: function (token) { //todo repeated code, magic numbers
             let counterColors = 1;
             let inLine = false;
             let row = token.getRow();
@@ -265,7 +265,7 @@ function coordinate(row, column) {
     }
 }
 
-function token(coordinate, color) {//todo innecesary class?
+function token(coordinate, color) {
     return {
         color: color,
         coordinate: coordinate,
@@ -281,7 +281,7 @@ function token(coordinate, color) {//todo innecesary class?
     }
 }
 
-function colors() { //todo howto enum?
+function colors() {
     return {
         Red: messages().RED,
         Yellow: messages().YELLOW,

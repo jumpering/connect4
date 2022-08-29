@@ -163,9 +163,7 @@ function inLineChecker() {
                 if ((row + i) >= 0 && (row + i) < 6 && (column - i) >= 0 && (column - i) < 7) {
                     if (typeof (this.tokens[row + i][column - i]) === 'object' && this.tokens[row + i][column - i].getColor() === color) {
                         counterColors++;
-                    } else {
-                        i = this.IN_LINE_NUMBER_OF_TOKENS; //todo goto encubierto
-                    }
+                    } 
                 }
                 inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
             }
@@ -173,8 +171,6 @@ function inLineChecker() {
                 if ((row - i) >= 0 && (row - i) < 6 && (column + i) >= 0 && (column + i) < 7) {
                     if (typeof (this.tokens[row - i][column + i]) === 'object' && this.tokens[row - i][column + i].getColor() === color) {
                         counterColors++;
-                    } else {
-                        i = this.IN_LINE_NUMBER_OF_TOKENS; //todo goto encubierto
                     }
                 }
                 inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
@@ -191,8 +187,6 @@ function inLineChecker() {
                 if ((row + i) >= 0 && (row + i) < 6 && (column + i) >= 0 && (column + i) < 7) {
                     if (typeof (this.tokens[row + i][column + i]) === 'object' && this.tokens[row + i][column + i].getColor() === color) {
                         counterColors++;
-                    } else {
-                        i = this.IN_LINE_NUMBER_OF_TOKENS; //todo goto encubierto
                     }
                 }
                 inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
@@ -201,9 +195,7 @@ function inLineChecker() {
                 if ((row - i) >= 0 && (row - i) < 6 && (column - i) >= 0 && (column - i) < 7) {
                     if (typeof (this.tokens[row - i][column - i]) === 'object' && this.tokens[row - i][column - i].getColor() === color) {
                         counterColors++;
-                    } else {
-                        i = this.IN_LINE_NUMBER_OF_TOKENS; //todo goto encubierto
-                    }
+                    } 
                 }
                 inLine ||= counterColors === this.IN_LINE_NUMBER_OF_TOKENS;
             }

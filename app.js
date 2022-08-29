@@ -159,12 +159,12 @@ function inLineChecker() {
             let row = token.getRow();
             let column = token.getColumn();
             for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
-                if ((row + i) >= 0 && (row + i) < 6 && (column - i) >= 0 && (column - i) < 7) {
+                if ((row + i) >= 0 && (row + i) < this.tokens.length && (column - i) >= 0 && (column - i) < this.tokens[0].length) {
                     if (typeof (this.tokens[row + i][column - i]) === 'object' && this.tokens[row + i][column - i].getColor() === token.getColor()) {
                         counterColors++;
                     }
                 }
-                if ((row - i) >= 0 && (row - i) < 6 && (column + i) >= 0 && (column + i) < 7) {
+                if ((row - i) >= 0 && (row - i) < this.tokens.length && (column + i) >= 0 && (column + i) < this.tokens[0].length) {
                     if (typeof (this.tokens[row - i][column + i]) === 'object' && this.tokens[row - i][column + i].getColor() === token.getColor()) {
                         counterColors++;
                     }
@@ -179,12 +179,12 @@ function inLineChecker() {
             let row = token.getRow();
             let column = token.getColumn();
             for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
-                if ((row + i) >= 0 && (row + i) < 6 && (column + i) >= 0 && (column + i) < 7) {
+                if ((row + i) >= 0 && (row + i) < this.tokens.length && (column + i) >= 0 && (column + i) < this.tokens[0].length) {
                     if (typeof (this.tokens[row + i][column + i]) === 'object' && this.tokens[row + i][column + i].getColor() === token.getColor()) {
                         counterColors++;
                     }
                 }
-                if ((row - i) >= 0 && (row - i) < 6 && (column - i) >= 0 && (column - i) < 7) {
+                if ((row - i) >= 0 && (row - i) < this.tokens.length && (column - i) >= 0 && (column - i) < this.tokens[0].length) {
                     if (typeof (this.tokens[row - i][column - i]) === 'object' && this.tokens[row - i][column - i].getColor() === token.getColor()) {
                         counterColors++;
                     }

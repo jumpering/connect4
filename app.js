@@ -26,6 +26,7 @@ function boardView() {
             console.writeln(messages().TITLE);
             this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);
             do {
+                this.turnView.nextTurn();
                 this.show();
                 console.write(messages().TURN_BY + this.turnView.getColor());
                 let inputColumn;
@@ -36,10 +37,8 @@ function boardView() {
                     }
                 } while (this.board.isFilledColumn(inputColumn));
                 this.board.putToken(inputColumn, this.turnView.getColor());
-                this.turnView.nextTurn();
             } while (!this.board.isEndGame());
             this.show();
-            this.turnView.nextTurn();
             console.writeln(this.board.isFilled() === true ? messages().GAME_OVER : messages().PLAYER + this.turnView.getColor() + messages().WIN);
         },
         show: function () {
@@ -222,7 +221,7 @@ function turnView() {
 
 function turn() {
     return {
-        color: colors().Red,
+        color: colors().Yellow,
         getColor: function () {
             return this.color;
         },

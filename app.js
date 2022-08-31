@@ -29,17 +29,17 @@ function boardView() {
                 this.turnView.nextTurn();
                 this.show();
                 console.write(messages().TURN_BY + this.turnView.getColor());
-                let inputColumn;
+                let turnInputColumn;
                 do {
-                    inputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
-                    if (this.board.isFilledColumn(inputColumn)) {
+                    turnInputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
+                    if (this.board.isFilledColumn(turnInputColumn)) {
                         console.writeln(messages().COLUMN_NOT_EMPTY);
                     }
-                } while (this.board.isFilledColumn(inputColumn));
-                this.board.putToken(inputColumn, this.turnView.getColor());
+                } while (this.board.isFilledColumn(turnInputColumn));
+                this.board.putToken(turnInputColumn, this.turnView.getColor());
             } while (!this.board.isEndGame());
             this.show();
-            console.writeln(this.board.isFilled() === true ? messages().GAME_OVER : messages().PLAYER + this.turnView.getColor() + messages().WIN);
+            console.writeln(this.showEndGame());
         },
         show: function () {
             let tokens = this.board.getTokens();
@@ -60,6 +60,12 @@ function boardView() {
                 }
                 console.writeln("");
             }
+        },
+        showEndGame: function(){
+            if(this.board.isFilled()){
+                return messages().GAME_OVER;
+            }
+            return messages().PLAYER + this.turnView.getColor() + messages().WIN;
         }
     }
 }

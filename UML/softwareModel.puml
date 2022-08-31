@@ -29,6 +29,7 @@ class boardView{
     - TurnView
     + init()
     + show()
+    + showEndGame()
 }
 class inLineChecker{
     - tokens
@@ -58,7 +59,7 @@ class coordinate {
 
 class turnView{
     - turn
-    + getColumn(maxColumns)
+    + getInputColumn(maxColumns)
     + nextTurn()
     + getColor()
 }

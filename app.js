@@ -28,10 +28,9 @@ function boardView() {
             do {
                 this.turnView.nextTurn();
                 this.show();
-                console.write(messages().TURN_BY + this.turnView.getColor());
                 let turnInputColumn;
                 do {
-                    turnInputColumn = this.turnView.getColumn(this.MAX_COLUMNS);
+                    turnInputColumn = this.turnView.getInputColumn(this.MAX_COLUMNS);
                     if (this.board.isFilledColumn(turnInputColumn)) {
                         console.writeln(messages().COLUMN_NOT_EMPTY);
                     }
@@ -204,11 +203,11 @@ function inLineChecker() {
 function turnView() {
     return {
         turn: turn(),
-        getColumn: function (maxColumns) {
+        getInputColumn: function (maxColumns) {
             let column = 0;
             let error = true;
             do {
-                column = console.readNumber(messages().INSERT_COLUMN);
+                column = console.readNumber(messages().TURN_BY + this.getColor() + messages().INSERT_COLUMN);
                 error = column < 0 || column > maxColumns - 1;
                 if (error) {
                     console.writeln(messages().INSERT_VALUES_BETWEEN + (maxColumns - 1));

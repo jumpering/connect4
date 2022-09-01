@@ -160,8 +160,8 @@ function inLineChecker() {
         isInLineDiagonal: function (token) {
             let counterColors = 1;
             let inLine = false;
-            let row = token.getRow();
-            let column = token.getColumn();
+            const row = token.getRow();
+            const column = token.getColumn();
             for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
                 if ((row + i) >= 0 && (row + i) < this.tokens.length && (column - i) >= 0 && (column - i) < this.tokens[0].length) {
                     if (typeof (this.tokens[row + i][column - i]) === 'object' && this.tokens[row + i][column - i].getColor() === token.getColor()) {
@@ -180,8 +180,8 @@ function inLineChecker() {
         isInLineReverseDiagonal: function (token) {
             let counterColors = 1;
             let inLine = false;
-            let row = token.getRow();
-            let column = token.getColumn();
+            const row = token.getRow();
+            const column = token.getColumn();
             for (let i = 1; i < this.IN_LINE_NUMBER_OF_TOKENS; i++) {
                 if ((row + i) >= 0 && (row + i) < this.tokens.length && (column + i) >= 0 && (column + i) < this.tokens[0].length) {
                     if (typeof (this.tokens[row + i][column + i]) === 'object' && this.tokens[row + i][column + i].getColor() === token.getColor()) {

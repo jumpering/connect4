@@ -96,7 +96,7 @@ function board() {
             }
         },
         isEndGame: function () {
-            return  this.isInLineToken(this.lastToken) || this.isFilled();
+            return this.isInLineToken(this.lastToken) || this.isFilled();
         },
         isFilled: function () {
             let countTokens = 0;

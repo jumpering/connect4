@@ -81,6 +81,7 @@ connect4 ..> boardView
 connect4 ..> yesNoDialog
 boardView *--> board
 boardView ..> turnView
+boardView ..> colors
 turnView o--> turn
 board o--> token
 board o--> inLineChecker

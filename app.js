@@ -25,6 +25,7 @@ function boardView() {
         init: function () {
             console.writeln(messages().TITLE);
             this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);
+            this.turnView.setInitColor(colors.Red);
             do {
                 this.turnView.nextTurn();
                 this.show();
@@ -220,20 +221,25 @@ function turnView() {
         },
         nextTurn: function () {
             this.turn.nextTurn();
+        },
+        setInitColor: function (color){
+            this.turn.setInitColor(color);
         }
     }
 }
 
 function turn() {
     return {
-        color: colors().Yellow,
+        color: undefined,
         getColor: function () {
             return this.color;
         },
         nextTurn: function () {
             this.color === colors().Red ? this.color = colors().Yellow : this.color = colors().Red;
+        },
+        setInitColor: function (color){
+            this.color = color;
         }
-
     }
 }
 

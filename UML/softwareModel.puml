@@ -62,12 +62,14 @@ class turnView{
     + getInputColumn(maxColumns)
     + nextTurn()
     + getColor()
+    + setInitColor(color)
 }
 
 class turn{
     - color
     + getColor()
     + nextTurn()
+    + setInitColor(color)
 }
 
 enum colors{

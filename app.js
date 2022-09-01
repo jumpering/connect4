@@ -215,11 +215,11 @@ function turnView() {
             } while (error);
             return column;
         },
-        getColor: function () {
-            return this.turn.getColor();
-        },
         nextTurn: function () {
             this.turn.nextTurn();
+        },
+        getColor: function () {
+            return this.turn.getColor();
         }
     }
 }
@@ -227,11 +227,11 @@ function turnView() {
 function turn() {
     return {
         color: colors().Yellow,
-        getColor: function () {
-            return this.color;
-        },
         nextTurn: function () {
             this.color === colors().Red ? this.color = colors().Yellow : this.color = colors().Red;
+        },
+        getColor: function () {
+            return this.color;
         }
     }
 }

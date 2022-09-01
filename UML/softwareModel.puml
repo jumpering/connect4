@@ -66,8 +66,8 @@ class turnView{
 
 class turn{
     - color
-    + getColor()
     + nextTurn()
+    + getColor()
 }
 
 enum colors{

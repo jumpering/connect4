@@ -62,14 +62,12 @@ class turnView{
     + getInputColumn(maxColumns)
     + nextTurn()
     + getColor()
-    + setInitColor(color)
 }
 
 class turn{
     - color
     + getColor()
     + nextTurn()
-    + setInitColor(color)
 }
 
 enum colors{
@@ -81,7 +79,6 @@ connect4 ..> boardView
 connect4 ..> yesNoDialog
 boardView *--> board
 boardView ..> turnView
-boardView ..> colors
 turnView o--> turn
 board o--> token
 board o--> inLineChecker

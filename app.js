@@ -60,8 +60,8 @@ function boardView() {
                 console.writeln("");
             }
         },
-        showEndGame: function(){
-            if(this.board.isFilled()){
+        showEndGame: function () {
+            if (this.board.isFilled()) {
                 return messages().GAME_OVER;
             }
             return messages().PLAYER + this.turnView.getColor() + messages().WIN;
@@ -96,7 +96,7 @@ function board() {
             }
         },
         isEndGame: function () {
-            return this.isFilled() || this.isInLineToken(this.lastToken);
+            return  this.isInLineToken(this.lastToken) || this.isFilled();
         },
         isFilled: function () {
             let countTokens = 0;

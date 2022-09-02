@@ -28,14 +28,14 @@ function boardView() {
             do {
                 this.turnView.nextTurn();
                 this.show();
-                let turnInputColumn;
+                let turnInputToken;
                 do {
-                    turnInputColumn = this.turnView.getInputColumn(this.MAX_COLUMNS);
-                    if (this.board.isFilledColumn(turnInputColumn)) {
+                    turnInputToken = this.turnView.getToken(this.MAX_COLUMNS);
+                    if (this.board.isFilledColumn(turnInputToken)) {
                         console.writeln(messages().COLUMN_NOT_EMPTY);
                     }
-                } while (this.board.isFilledColumn(turnInputColumn));
-                this.board.putToken(turnInputColumn, this.turnView.getColor());
+                } while (this.board.isFilledColumn(turnInputToken));
+                this.board.putToken(turnInputToken);
             } while (!this.board.isEndGame());
             this.show();
             console.writeln(this.showEndGame());
@@ -65,28 +65,27 @@ function boardView() {
                 return messages().GAME_OVER;
             }
             return messages().PLAYER + this.turnView.getColor() + messages().WIN;
-        }
+        },
     }
 }
 
 function board() {
     return {
-        lastToken: undefined,
         tokens: [],
-        inLineChecker: inLineChecker(),
+        lastToken: undefined,
         reset: function (maxRows, maxColumns) {
             this.tokens = new Array(maxRows);
             for (let i = 0; i < maxRows; i++) {
                 this.tokens[i] = new Array(maxColumns);
             }
         },
-        isFilledColumn: function (column) {
-            return typeof (this.tokens[0][column]) === 'object';
+        isFilledColumn: function (token) {
+            return typeof (this.tokens[0][token.getColumn()]) === 'object';
         },
-        putToken: function (column, color) {
-            let inputCoordinate = coordinate(this.getFirstEmptyRowFromColumn(column), column);
-            this.lastToken = token(inputCoordinate, color);
-            this.tokens[this.lastToken.getRow()][this.lastToken.getColumn()] = this.lastToken;
+        putToken: function (token) {
+            token.setRow(this.getFirstEmptyRowFromColumn(token.getColumn()));
+            this.lastToken = token;
+            this.tokens[this.lastToken.getRow()][this.lastToken.getColumn()] = token;
         },
         getFirstEmptyRowFromColumn: function (column) {
             for (let i = this.tokens.length - 1; i >= 0; i--) {
@@ -96,7 +95,7 @@ function board() {
             }
         },
         isEndGame: function () {
-            return this.isInLineToken(this.lastToken) || this.isFilled();
+            return inLineChecker().isInLineToken(this.tokens, this.lastToken) || this.isFilled();
         },
         isFilled: function () {
             let countTokens = 0;
@@ -108,9 +107,6 @@ function board() {
                 }
             }
             return countTokens === this.tokens.length * this.tokens[0].length;
-        },
-        isInLineToken: function (token) {
-            return this.inLineChecker.isInLineToken(this.tokens, token);
         },
         getTokens: function () {
             return this.tokens;
@@ -203,17 +199,17 @@ function inLineChecker() {
 function turnView() {
     return {
         turn: turn(),
-        getInputColumn: function (maxColumns) {
+        getToken: function (maxColumns) {
             let column = 0;
             let error = true;
             do {
-                column = console.readNumber(messages().TURN_BY + this.getColor() + messages().INSERT_COLUMN);
+                column = console.readNumber(messages().TURN_BY + this.turn.getColor() + messages().INSERT_COLUMN);
                 error = column < 0 || column > maxColumns - 1;
                 if (error) {
                     console.writeln(messages().INSERT_VALUES_BETWEEN + (maxColumns - 1));
                 }
             } while (error);
-            return column;
+            return this.turn.getToken(column);
         },
         nextTurn: function () {
             this.turn.nextTurn();
@@ -227,6 +223,10 @@ function turnView() {
 function turn() {
     return {
         color: colors().Yellow,
+        getToken: function (column){
+            const inputCoordinate = coordinate(0, column);
+            return token(inputCoordinate, this.color);
+        },
         nextTurn: function () {
             this.color === colors().Red ? this.color = colors().Yellow : this.color = colors().Red;
         },
@@ -245,6 +245,9 @@ function coordinate(row, column) {
         },
         getColumn: function () {
             return this.column;
+        },
+        setRow: function (row) {
+            this.row = row;
         }
     }
 }
@@ -261,6 +264,9 @@ function token(coordinate, color) {
         },
         getColumn: function () {
             return this.coordinate.getColumn();
+        },
+        setRow: function (row) {
+            this.coordinate.setRow(row);
         }
     }
 }

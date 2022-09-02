@@ -57,7 +57,7 @@ function boardView() {
                         }
                     }
                 }
-                console.writeln("");
+                console.writeln();
             }
         },
         showEndGame: function () {

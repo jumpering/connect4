@@ -11,15 +11,14 @@ class yesNoDialog{
 }
 class board{
     - tokens[]
-    - inLineChecker
     - lastToken
     + reset(maxRows, maxColumns)
     + isFilledColumn(token)
-    + putToken(column, color)
-    + getFirstEmptyRowFromColumn(column)
+    + putToken(token)
+    - getFirstEmptyRowFromColumn(column)
     + isEndGame()
     + isFilled()
-    + isInLineToken(tokens[])
+    + isInLineToken(token)
     + getTokens()
 }
 class boardView{
@@ -32,8 +31,8 @@ class boardView{
     + showEndGame()
 }
 class inLineChecker{
-    - tokens
     - IN_LINE_NUMBER_OF_TOKENS
+    - tokens
     + isInLineToken(tokens[], token)
     - isInLineHorizontal(token)
     - isInLineVertical(token)
@@ -47,6 +46,7 @@ class token{
     + getColor()
     + getRow()
     + getColumn()
+    + setRow(row)
 }
 
 class coordinate {
@@ -55,18 +55,18 @@ class coordinate {
     + getRow()
     + getColumn()
     + setRow(row)
-
 }
 
 class turnView{
     - turn
-    + getInputColumn(maxColumns)
+    + getToken()
     + nextTurn()
     + getColor()
 }
 
 class turn{
     - color
+    + getToken(column) 
     + nextTurn()
     + getColor()
 }
@@ -80,11 +80,11 @@ connect4 ..> boardView
 connect4 ..> yesNoDialog
 boardView *--> board
 boardView ..> turnView
-turnView o--> turn
 board o--> token
-board o--> inLineChecker
-board ..> coordinate
-turn o--> colors
+board ..> inLineChecker
+turnView *--> turn
+turn ..> coordinate
+turn ..> token
 token *--> colors
 token *--> coordinate
 @enduml

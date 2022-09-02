@@ -41,7 +41,7 @@ class inLineChecker{
 }
 
 class token{
-    - Color
+    - color
     - coordinate
     + getColor()
     + getRow()

@@ -17,27 +17,27 @@ function connect4() {
 }
 
 function boardView() {
+    const MAX_ROWS = 6;
+    const MAX_COLUMNS = 7;
     return {
-        MAX_ROWS: 6,
-        MAX_COLUMNS: 7,
-        board: board(),
-        turnView: turnView(),
+        board: board(MAX_ROWS, MAX_COLUMNS),
+        turnView: turnView(MAX_COLUMNS),
         init: function () {
             console.writeln(messages().TITLE);
-            this.board.reset(this.MAX_ROWS, this.MAX_COLUMNS);
-            do {
+            this.board.reset();
+            this.show();
+            while (!this.board.isEndGame()) {
                 this.turnView.nextTurn();
-                this.show();
                 let turnInputToken;
                 do {
-                    turnInputToken = this.turnView.getToken(this.MAX_COLUMNS);
-                    if (this.board.isFilledColumn(turnInputToken)) {
+                    turnInputToken = this.turnView.getToken();
+                    if (this.board.isCompletedColumn(turnInputToken)) {
                         console.writeln(messages().COLUMN_NOT_EMPTY);
                     }
-                } while (this.board.isFilledColumn(turnInputToken));
+                } while (this.board.isCompletedColumn(turnInputToken));
                 this.board.putToken(turnInputToken);
-            } while (!this.board.isEndGame());
-            this.show();
+                this.show();
+            };
             console.writeln(this.showEndGame());
         },
         show: function () {
@@ -61,7 +61,7 @@ function boardView() {
             }
         },
         showEndGame: function () {
-            if (this.board.isFilled()) {
+            if (this.board.isCompleted()) {
                 return messages().GAME_OVER;
             }
             return messages().PLAYER + this.turnView.getColor() + messages().WIN;
@@ -69,17 +69,17 @@ function boardView() {
     }
 }
 
-function board() {
+function board(maxRows, maxColumns) {
     return {
         tokens: [],
         lastToken: undefined,
-        reset: function (maxRows, maxColumns) {
+        reset: function () {
             this.tokens = new Array(maxRows);
             for (let i = 0; i < maxRows; i++) {
                 this.tokens[i] = new Array(maxColumns);
             }
         },
-        isFilledColumn: function (token) {
+        isCompletedColumn: function (token) {
             return typeof (this.tokens[0][token.getColumn()]) === 'object';
         },
         putToken: function (token) {
@@ -95,9 +95,9 @@ function board() {
             }
         },
         isEndGame: function () {
-            return inLineChecker().isInLineToken(this.tokens, this.lastToken) || this.isFilled();
+            return inLineChecker().isInLineToken(this.tokens, this.lastToken) || this.isCompleted();
         },
-        isFilled: function () {
+        isCompleted: function () {
             let countTokens = 0;
             for (let i = 0; i < this.tokens.length; i++) {
                 for (let j = 0; j < this.tokens[i].length; j++) {
@@ -119,13 +119,16 @@ function inLineChecker() {
         IN_LINE_NUMBER_OF_TOKENS: 4,
         tokens: [],
         isInLineToken: function (tokens, token) {
-            this.tokens = tokens;
-            let inLineToken = false;
-            inLineToken ||= this.isInLineHorizontal(token);
-            inLineToken ||= this.isInLineVertical(token);
-            inLineToken ||= this.isInLineDiagonal(token);
-            inLineToken ||= this.isInLineReverseDiagonal(token);
-            return inLineToken;
+            if (typeof (token) !== 'undefined') {
+                this.tokens = tokens;
+                let inLineToken = false;
+                inLineToken ||= this.isInLineHorizontal(token);
+                inLineToken ||= this.isInLineVertical(token);
+                inLineToken ||= this.isInLineDiagonal(token);
+                inLineToken ||= this.isInLineReverseDiagonal(token);
+                return inLineToken;
+            }
+            return false;
         },
         isInLineHorizontal: function (token) {
             let counterColors = 0;
@@ -196,17 +199,17 @@ function inLineChecker() {
     }
 }
 
-function turnView() {
+function turnView(maxColumn) {
     return {
         turn: turn(),
-        getToken: function (maxColumns) {
+        getToken: function () {
             let column = 0;
             let error = true;
             do {
                 column = console.readNumber(messages().TURN_BY + this.turn.getColor() + messages().INSERT_COLUMN);
-                error = column < 0 || column > maxColumns - 1;
+                error = column < 0 || column > maxColumn - 1;
                 if (error) {
-                    console.writeln(messages().INSERT_VALUES_BETWEEN + (maxColumns - 1));
+                    console.writeln(messages().INSERT_VALUES_BETWEEN + (maxColumn - 1));
                 }
             } while (error);
             return this.turn.getToken(column);
@@ -222,8 +225,8 @@ function turnView() {
 
 function turn() {
     return {
-        color: colors().Yellow,
-        getToken: function (column){
+        color: colors().Red,
+        getToken: function (column) {
             const inputCoordinate = coordinate(0, column);
             return token(inputCoordinate, this.color);
         },

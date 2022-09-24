@@ -1,0 +1,59 @@
+@startuml
+
+class connect4{
+    - boardView
+    - yesNoDialog
+    + playGame()
+}
+class yesNoDialogView{
+    + read(message)
+    + isAffirmative()
+}
+
+class createGame{
+
+}
+
+class createGameView{
+
+}
+
+
+class createBoardView{
+
+}
+
+class createTurn{
+
+}
+
+class createTurnView{
+
+
+}
+
+class createCoordinate{
+
+}
+
+enum colors{
+Red
+Yellow
+}
+
+
+connect4 ..> yesNoDialogView
+connect4 *--> createGame
+createGame --> createBoard
+createGame --> createTurn
+
+
+createGame ..> createGameView
+createGameView ..> createBoardView
+createGameView ..> createTurnView
+
+createBoard *--> createCoordinate
+
+createTurn --> colors
+
+@enduml

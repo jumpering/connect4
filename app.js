@@ -19,7 +19,7 @@ function connect4() {
 function boardView() {
     const MAX_ROWS = 6;
     const MAX_COLUMNS = 7;
-    return {
+    return {   
         board: board(MAX_ROWS, MAX_COLUMNS),
         turnView: turnView(MAX_COLUMNS),
         init: function () {
@@ -114,7 +114,7 @@ function board(maxRows, maxColumns) {
     }
 }
 
-function inLineChecker() {
+function inLineChecker() { //todo smell repeated code. Use Direction and Coordinate classes
     return {
         IN_LINE_NUMBER_OF_TOKENS: 4,
         tokens: [],

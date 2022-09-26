@@ -5,4 +5,4 @@
 ![SoftwareModel](/out/UML/softwareModel/softwareModel.svg)
 
 ## Software model V2
-![SoftwareModel](/out/UML/softwareModel/softwareModel_v2.svg)
+![SoftwareModel](/out/UML/softwareModel_v2/softwareModel_v2.svg)

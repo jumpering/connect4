@@ -32,6 +32,10 @@ class createTurnView{
 
 }
 
+class createMessageView{
+
+}
+
 class createCoordinate{
 
 }
@@ -44,13 +48,15 @@ Yellow
 
 connect4 ..> yesNoDialogView
 connect4 *--> createGame
+connect4 *--> createGameView
 createGame --> createBoard
 createGame --> createTurn
 
 
-createGame ..> createGameView
-createGameView ..> createBoardView
-createGameView ..> createTurnView
+createGame --> createGameView
+createGameView o--> createBoardView
+createGameView o--> createTurnView
+createGameView o--> createMessageView
 
 createBoard *--> createCoordinate
 

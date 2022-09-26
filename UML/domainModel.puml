@@ -7,32 +7,44 @@ class Player
 class Holes
 class Goal
 class InLine
+class Line
+class Direction
 enum Colors{
 Red
 Yellow
 }
 
 Connect4 *--> Board
+Connect4 *--> "2" Player
 Connect4 *--> "7..42" Turn
 Player --> Goal
 
 Goal *--> InLine
 
-Token "4" -->  InLine
-
-InLine <|-- Vertical
-InLine <|-- Horizontal
-InLine <|-- Diagonal
 
 
-Turn o--> "2" Player
-Turn <-- Board
+Direction <|-- Vertical
+Direction <|-- Horizontal
+Direction <|-- Diagonal
+
+Line <|-- InLine
+
+Line *--> "4" Token
+
+Line *--> Direction
+
+InLine --> "4 same color" Token 
+
+
+Turn o--> Player
+Turn ..> Holes
+
 
 Board *--> "7x6" Holes
 
-Holes o--> "0..42" Token
+Holes o--> "0..1" Token
 
-Player ..> "21" Token
+Player ..> "4..21" Token
 
 Token *--> Colors
 @enduml

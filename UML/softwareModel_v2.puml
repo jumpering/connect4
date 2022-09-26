@@ -32,7 +32,7 @@ class createTurnView{
 
 }
 
-class createMessageView{
+class messageView{
 
 }
 
@@ -56,7 +56,7 @@ createGame --> createTurn
 createGame --> createGameView
 createGameView o--> createBoardView
 createGameView o--> createTurnView
-createGameView o--> createMessageView
+createGameView o--> messageView
 
 createBoard *--> createCoordinate
 

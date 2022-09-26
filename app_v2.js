@@ -10,7 +10,7 @@ function connect4() {
             yesNoDialogView = createYesNoDialogView();
             do {
                 game.playMatch();
-                this.yesNoDialogView.read(messages().PLAY_AGAIN);
+                this.yesNoDialogView.read(messageView().PLAY_AGAIN);
             } while (this.yesNoDialogView.isAffirmative());
         }
     }
@@ -121,7 +121,7 @@ function createYesNoDialogView() {
     }
 }
 
-function messagesView() {
+function messageView() {
     return {
         TITLE: "\n      Connect4\n",
         TURN_BY: "\nTurn ",

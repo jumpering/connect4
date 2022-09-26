@@ -101,8 +101,8 @@ function createTurnView() { }
 
 function createYesNoDialogView() {
     return {
-        YES: messages().YES,
-        NO: messages().NO,
+        YES: messageView().YES,
+        NO: messageView().NO,
         response: "",
         error: true,
         read: function (message) {
@@ -110,7 +110,7 @@ function createYesNoDialogView() {
                 this.response = console.readString(message);
                 this.error = this.response != this.YES && this.response != this.NO;
                 if (this.error) {
-                    console.writeln(messages().RESPONSE_MUST_BE + this.YES + messages().OR + this.NO);
+                    console.writeln(messageView().RESPONSE_MUST_BE + this.YES + messageView().OR + this.NO);
                 }
             } while (this.error);
             return this.response;

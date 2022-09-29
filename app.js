@@ -101,10 +101,6 @@ function createBoardView(board) {
             }
         },
 
-        reset() {
-            board.reset();
-        },
-
         getCoordinate() {
             let column = this.getColumn();
             let coordinate = createCoordinate(board.getFirstEmptyRow(column), column);

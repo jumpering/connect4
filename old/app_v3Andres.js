@@ -10,8 +10,8 @@ function connect4() {
             yesNoDialogView = createYesNoDialogView();
             do {
                 gameView.playOneRound();
-                this.yesNoDialogView.read(messageView().PLAY_AGAIN);
-            } while (this.yesNoDialogView.isAffirmative());
+                yesNoDialogView.read(messageView().PLAY_AGAIN);
+            } while (!yesNoDialogView.isAffirmative());
         }
     }
 }
@@ -28,7 +28,7 @@ function createGameView(game) {
                 boardView.show();
                 turnView.show();
                 coordinate = boardView.getCoordinate();
-                game.updateBoard(coordinate, game.getCurrentColor());
+                game.updateBoard(coordinate);
                 if (!game.isFinished(coordinate)) {
                     game.changeTurn();
                 }
@@ -55,8 +55,8 @@ function createGame() {
             board.reset();
         },
 
-        updateBoard(coordinate, color) {
-            board.update(coordinate, color);
+        updateBoard(coordinate) {
+            board.update(coordinate, this.getCurrentColor());
         },
 
         getCurrentColor() {
@@ -84,62 +84,6 @@ function createGame() {
     }
 }
 
-function createBoard() {
-    const MAX_ROWS = 6;
-    const MAX_COLUMNS = 7;
-    return {
-        grid: [],
-        reset() { //se rellena con undefineds
-            this.grid = new Array(MAX_ROWS);
-            for (let i = 0; i < MAX_ROWS; i++) {
-                this.grid[i] = new Array(MAX_COLUMNS);
-            }
-        },
-
-        isFinished(coordinate) {
-            return this.isWinner(coordinate) || this.isTied();
-        },
-
-        update(coordinate, color) {
-            this.grid[coordinate.getRow()][coordinate.getColumn() - 1] = color;
-        },
-
-        isWinner(coordinate) {
-            //todo search with directions
-            return false;
-        },
-
-        isTied() {
-            for (let i = 0; i < this.grid.length; i++) {
-                if (typeof (this.grid[MAX_ROWS -1][i]) === 'undefined') {
-                    return false;
-                }
-                return true;
-            }
-        },
-
-        getFirstEmptyRow(column) {
-            for (let i = this.grid.length - 1; i >= 0; i--) {
-                if (typeof (this.grid[i][column]) === 'undefined') {
-                    return i;
-                }
-            }
-        },
-
-        isCompletedColumn(column) {
-            return this.grid[MAX_ROWS - 1][column] !== 'undefined';
-        },
-
-        isOnValidRange(column) {
-            return 0 < column && column < MAX_COLUMNS;
-        },
-
-        getMaxColumns(){
-            return this.grid[0].length;
-        }
-    }
-}
-
 function createBoardView(board) {
     return {
         show() {
@@ -149,16 +93,14 @@ function createBoardView(board) {
                     if (typeof (board.grid[i][j]) === 'undefined') {
                         console.write(messageView().BOARD_HOLE);
                     }
-                    if (board.grid[i][j] === colors().RED) {
-                            console.write(messageView().BOARD_RED);
-                    }
-                    if (board.grid[i][j] === colors().YELLOW) {
-                            console.write(messageView().BOARD_YELLOW);
+                    else {
+                        console.write(board.grid[i][j]);
                     }
                 }
                 console.writeln();
             }
         },
+
         reset() {
             board.reset();
         },
@@ -176,12 +118,81 @@ function createBoardView(board) {
                 if (!board.isOnValidRange(column)) {
                     console.writeln(messageView().INSERT_VALUES_BETWEEN + board.getMaxColumns(column));
                 }
-                if (!board.isCompletedColumn(column)) {
+                if (board.isCompletedColumn(column)) {
                     console.writeln(messageView().COLUMN_NOT_EMPTY);
                 }
-            } while (!board.isOnValidRange(column) && !board.isCompletedColumn(column));
+            } while (!board.isOnValidRange(column) || board.isCompletedColumn(column));
             return column;
         },
+    }
+}
+
+function createBoard() {
+    const MAX_ROWS = 6;
+    const MAX_COLUMNS = 7;
+    return {
+        grid: [],
+        reset() {
+            this.grid = new Array(MAX_ROWS);
+            for (let i = 0; i < MAX_ROWS; i++) {
+                this.grid[i] = new Array(MAX_COLUMNS);
+            }
+        },
+
+        isFinished(coordinate) {
+            return this.isWinner(coordinate) || this.isTied();
+        },
+
+        update(coordinate, color) {
+            this.grid[coordinate.getRow()][coordinate.getColumn() - 1] = color;
+        },
+
+        isWinner(coordinate) { //TODO
+            return false;
+        },
+
+        isTied() {
+            for (let i = 0; i < this.grid.length; i++) {
+                for (let j = 0; j < this.grid[i].length; j++) {
+                    if (this.grid[i][j] === undefined) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        },
+
+        getFirstEmptyRow(column) {
+            for (let i = this.grid.length - 1; i >= 0; i--) {
+                if (typeof (this.grid[i][column - 1]) === 'undefined') {
+                    return i;
+                }
+            }
+        },
+
+        isCompletedColumn(column) {
+            return typeof (this.grid[0][column - 1]) !== 'undefined';
+        },
+
+        isOnValidRange(column) {
+            return 1 <= column && column <= MAX_COLUMNS;
+        },
+
+        getMaxColumns() {
+            return this.grid[0].length;
+        },
+    }
+}
+
+function createTurnView(turn) {
+    return {
+        show() {
+            if (turn.getCurrentColor() === colors().RED){
+                console.write(messageView().TURN + messageView().RED);
+            } else {
+                console.write(messageView().TURN + messageView().YELLOW);
+            }
+        }
     }
 }
 
@@ -199,26 +210,28 @@ function createTurn() {
     }
 }
 
+function colors() { //acoplado a vista, ¿como hacer enumerado?
+    return {
+        RED: messageView().BOARD_RED,
+        YELLOW: messageView().BOARD_YELLOW
+    }
+}
+
 function createCoordinate(row, column) {
     return {
         row: row,
         column: column,
 
-        getRow(){
+        getRow() {
             return this.row;
         },
 
-        getColumn(){
+        getColumn() {
             return this.column;
-        }
-    }
-}
+        },
 
-function createTurnView(turn) {
-
-    return {
-        show() {
-            console.write(messageView().TURN + turn.getCurrentColor());
+        displace(direction) { //TODO
+            return false;
         }
     }
 }
@@ -229,7 +242,8 @@ function createYesNoDialogView() {
         NO: messageView().NO,
         response: "",
         error: true,
-        read: function (message) {
+
+        read(message) {
             do {
                 this.response = console.readString(message);
                 this.error = this.response != this.YES && this.response != this.NO;
@@ -239,7 +253,8 @@ function createYesNoDialogView() {
             } while (this.error);
             return this.response;
         },
-        isAffirmative: function () {
+
+        isAffirmative() {
             return this.response === this.YES;
         }
     }
@@ -250,8 +265,8 @@ function messageView() {
         TITLE: "\n      Connect4\n",
         TURN: "\nTurn ",
         COLUMN_NOT_EMPTY: "This column has not empty holes, select another column",
-        INSERT_COLUMN: " insert column: ",
-        TIED_GAME: "Game over",
+        INSERT_COLUMN: " please insert column: ",
+        TIED_GAME: "Tied game",
         PLAYER: "Player ",
         WIN_GAME: " win!",
         BOARD_HEADER: "\n 1  2  3  4  5  6  7\n -------------------",
@@ -267,11 +282,4 @@ function messageView() {
         RED: "Red",
         YELLOW: "Yellow"
     }
-}
-
-function colors(){
-        return{
-            RED: "Red",
-            YELLOW: "Yellow"
-        }
 }

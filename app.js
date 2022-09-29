@@ -217,10 +217,10 @@ function createTurn() {
     }
 }
 
-function colors() { //acoplado a vista, ¿como hacer enumerado?
+function colors() {
     return {
-        RED: messageView().BOARD_RED,
-        YELLOW: messageView().BOARD_YELLOW
+        RED: "R",
+        YELLOW: "Y"
     }
 }
 

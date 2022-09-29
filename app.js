@@ -94,7 +94,12 @@ function createBoardView(board) {
                         console.write(messageView().BOARD_HOLE);
                     }
                     else {
-                        console.write(board.grid[i][j]);
+                        if (board.grid[i][j] === colors().RED){
+                            console.write(messageView().BOARD_RED);
+                        }
+                        if (board.grid[i][j] === colors().YELLOW){
+                            console.write(messageView().BOARD_YELLOW);
+                        }
                     }
                 }
                 console.writeln();

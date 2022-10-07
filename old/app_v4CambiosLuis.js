@@ -27,8 +27,8 @@ function createGameView(game) {
             do {
                 boardView.show();
                 turnView.show();
-                coordinate = boardView.readCoordinate();
-                game.putToken(coordinate);
+                coordinate = boardView.getCoordinate();//ha de ser read
+                game.updateBoard(coordinate);
                 if (!game.isFinished(coordinate)) {
                     game.changeTurn();
                 }
@@ -41,11 +41,7 @@ function createGameView(game) {
             if (game.isTied()) {
                 console.writeln(messageView().TIED_GAME);
             } else {
-                if (game.getCurrentColor() === colors().RED) {
-                    console.writeln(messageView().PLAYER + messageView().RED + messageView().WIN_GAME);
-                } else {
-                    console.writeln(messageView().PLAYER + messageView().YELLOW + messageView().WIN_GAME);
-                }
+                console.writeln(messageView().PLAYER + game.getCurrentColor() + messageView().WIN_GAME);
             }
         },
     }
@@ -59,8 +55,8 @@ function createGame() {
             board.reset();
         },
 
-        putToken(coordinate) {
-            board.putToken(coordinate, this.getCurrentColor());
+        updateBoard(coordinate) {//sin board (clase alternativas con interfaces diferentes smell), más que update sería put
+            board.update(coordinate, this.getCurrentColor());
         },
 
         getCurrentColor() {
@@ -92,44 +88,60 @@ function createBoardView(board) {
     return {
         show() {
             console.writeln(messageView().BOARD_HEADER);
-            for (let i = 0; i < board.slots.length; i++) {
-                for (let j = 0; j < board.slots[i].length; j++) {
-                    if (board.slots[i][j] === " ") {
+            for (let i = 0; i < board.grid.length; i++) {
+                for (let j = 0; j < board.grid[i].length; j++) {
+                    if (board.grid[i][j] === "") {
                         console.write(messageView().BOARD_HOLE);
                     }
                     else {
-                        console.write(board.slots[i][j] === colors().RED ? messageView().BOARD_RED : messageView().BOARD_YELLOW);
+                        if (board.grid[i][j] === colors().RED){  //////repeated code, compactar, como si fuera un array
+                            console.write(messageView().BOARD_RED);
+                        }
+                        if (board.grid[i][j] === colors().YELLOW){
+                            console.write(messageView().BOARD_YELLOW);
+                        }
                     }
                 }
                 console.writeln();
             }
         },
 
-        readCoordinate() {
+        getCoordinate() {//ha de ser read PUEDE ESTAR JUNTO CON GETCOLUMN, DEJAR GETCCOORDINATE
+            let column = this.getColumn();
+            let coordinate = createCoordinate(board.getFirstEmptyRow(column), column);
+            return coordinate;
+        },
+
+        getColumn() {//ha de ser read
             let column;
             do {
                 column = console.readNumber(messageView().INSERT_COLUMN);
                 if (!board.isOnValidRange(column)) {
-                    console.writeln(messageView().INSERT_VALUES_BETWEEN + board.getMaxColumns());
+                    console.writeln(messageView().INSERT_VALUES_BETWEEN + board.getMaxColumns(column));
                 } else if (board.isCompletedColumn(column - 1)) {
                     console.writeln(messageView().COLUMN_NOT_EMPTY);
                 }
             } while (!board.isOnValidRange(column) || board.isCompletedColumn(column - 1));
-            return new Coordinate(board.getFirstEmptyRow(column - 1), column - 1);
-        }
+            return (column - 1);
+        },
     }
 }
 
 function createBoard() {
+    const MAX_ROWS = 6;
+    const MAX_COLUMNS = 7;
     return {
-        slots: [],
-        EMPTY_SLOT: " ",
+        grid: [], //mal nombre
 
         reset() {
-            new Coordinate(); //¿porque si no hago este NEW no obtengo propiedades estáticas de la clase Coordinate?¿?¿
-            this.slots = new Array(Coordinate.MAX_ROWS);
-            for (let i = 0; i < Coordinate.MAX_ROWS; i++) {
-                this.slots[i] = new Array(Coordinate.MAX_COLUMNS).fill(this.EMPTY_SLOT);
+            this.grid = new Array(MAX_ROWS); ///con un fill se puede rellenar del tirón
+            for (let i = 0; i < MAX_ROWS; i++) {
+                this.grid[i] = new Array(MAX_COLUMNS);
+            }
+            for (let i = 0; i < this.grid.length; i++) {
+                for (let j = 0; j < this.grid[0].length; j++) {
+                    this.grid[i][j] = "";//dice que combiene más un espacio que una cadena vacia
+                }   
             }
         },
 
@@ -137,72 +149,51 @@ function createBoard() {
             return this.isWinner(coordinate) || this.isTied();
         },
 
-        putToken(coordinate, color) {
-            this.slots[coordinate.getRow()][coordinate.getColumn()] = color;
+        update(coordinate, color) {
+            this.grid[coordinate.getRow()][coordinate.getColumn()] = color;
         },
 
-        isWinner(coordinate) {
-            let isWinner = false;
-            let currentColor = this.slots[coordinate.getRow()][coordinate.getColumn()];
-            let directions = [];
-            directions.push(new Direction("SOUTH", 1, 0));
-            directions.push(new Direction("EAST", 0, 1));
-            directions.push(new Direction("WEST", 0, -1));
-            directions.push(new Direction("NORTH_EAST", -1, 1));
-            directions.push(new Direction("SOUTH_WEST", 1, -1));
-            directions.push(new Direction("SOUTH_EAST", 1, 1));
-            directions.push(new Direction("NORTH_WEST", -1, -1));
-            directions.forEach(direction => {
-                let coordinates = coordinate.getOnLine(direction);
-                let colorCounter = 0;
-                coordinates.forEach(coordinate => {
-                    if (this.slots[coordinate.getRow()][coordinate.getColumn()] === currentColor) {
-                        colorCounter++;
-                    } else {
-                        colorCounter = 0;
-                    }
-                    if (colorCounter === 4) {
-                        isWinner = true;
-                    }
-                });
-            });
-            return isWinner;
+        isWinner(coordinate) { //TODO
+            return false;
         },
 
         isTied() {
-            for (let i = 0; i < Coordinate.MAX_COLUMNS; i++) {
-                if (this.slots[0][i] === " ") {
-                    return false;
+            for (let i = 0; i < this.grid.length; i++) { //este está mal, ojo puede estar completo pero ganar en la última ficha
+                for (let j = 0; j < this.grid[i].length; j++) {
+                    if (this.grid[i][j] === "") {
+                        return false;
+                    }
                 }
             }
             return true;
         },
-        getFirstEmptyRow(column) {//como assert columna no completa
-            for (let i = Coordinate.MAX_ROWS - 1; i >= 0; i--) {
-                if (this.slots[i][column] === " ") {
+
+        getFirstEmptyRow(column) {//tal vez un assert column not completed
+            for (let i = this.grid.length - 1; i >= 0; i--) {
+                if (this.grid[i][column] === "") {
                     return i;
                 }
             }
         },
 
         isCompletedColumn(column) {
-            return this.slots[0][column] !== " ";
+            return this.grid[0][column] !== "";
         },
 
         isOnValidRange(column) {
-            return 1 <= column && column <= Coordinate.MAX_COLUMNS;
+            return 1 <= column && column <= MAX_COLUMNS;
         },
 
         getMaxColumns() {
-            return Coordinate.MAX_COLUMNS;
+            return this.grid[0].length; ///unificar criterios si usar length o maxColumns
         },
     }
 }
 
 function createTurnView(turn) {
     return {
-        show() {///esto en un array con una sola linea 0 o 1
-            if (turn.getCurrentColor() === colors().RED) {
+        show() {
+            if (turn.getCurrentColor() === colors().RED){ ///esto en un array con una sola linea 0 o 1
                 console.write(messageView().TURN + messageView().RED);
             } else {
                 console.write(messageView().TURN + messageView().YELLOW);
@@ -219,7 +210,7 @@ function createTurn() {
             return this.currentColor;
         },
 
-        change() {// usar indice
+        change() {
             this.currentColor = this.currentColor === colors().RED ? colors().YELLOW : colors().RED; //tal vez solo con 0 y 1
         }
     }
@@ -232,46 +223,22 @@ function colors() {
     }
 }
 
-function Coordinate(row, column) {
-    Coordinate.MAX_ROWS = 6;
-    Coordinate.MAX_COLUMNS = 7;
-    this.row = row;
-    this.column = column;
+function createCoordinate(row, column) {
+    return {
+        row: row,
+        column: column,
 
-    Coordinate.prototype.getRow = function () {
-        return this.row;
-    }
-    Coordinate.prototype.getColumn = function () {
-        return this.column;
-    }
+        getRow() {
+            return this.row;
+        },
 
-    Coordinate.prototype.getOnLine = function (direction) {
-        this.LENGTH_ON_LINE = 4;
-        this.coordinates = [];
-        let row = this.row;
-        let column = this.column;
-        this.coordinates.push(new Coordinate(this.row, this.column));
-        for (let i = 0; i < this.LENGTH_ON_LINE; i++) {
-            row = row + direction.getRow();
-            column = column + direction.getColumn();
-            if (row >= 0 && row < 6 && column >= 0 && column < 7) {
-                this.coordinates.push(new Coordinate(row, column));
-            }
+        getColumn() {
+            return this.column;
+        },
+
+        displace(direction) { //TODO
+            return false;
         }
-        return this.coordinates;
-    }
-}
-
-function Direction(name, row, column) {
-    this.coordinate = new Coordinate(row, column);
-    this.name = name;
-
-    Direction.prototype.getRow = function () {
-        return this.coordinate.getRow();
-    }
-
-    Direction.prototype.getColumn = function () {
-        return this.coordinate.getColumn();
     }
 }
 

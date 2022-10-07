@@ -41,7 +41,7 @@ function createGameView(game) {
             if (game.isTied()) {
                 console.writeln(messageView().TIED_GAME);
             } else {
-                if (game.getCurrentColor() === colors().RED) {
+                if (game.getCurrentColor() === colors().RED) {//esto en un array con una sola linea 0 o 1
                     console.writeln(messageView().PLAYER + messageView().RED + messageView().WIN_GAME);
                 } else {
                     console.writeln(messageView().PLAYER + messageView().YELLOW + messageView().WIN_GAME);
@@ -201,7 +201,7 @@ function createBoard() {
 
 function createTurnView(turn) {
     return {
-        show() {///esto en un array con una sola linea 0 o 1
+        show() {//esto en un array con una sola linea 0 o 1
             if (turn.getCurrentColor() === colors().RED) {
                 console.write(messageView().TURN + messageView().RED);
             } else {

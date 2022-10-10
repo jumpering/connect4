@@ -253,14 +253,14 @@ function createCoordinate(row, column) {
                 row = row + direction.getRow();
                 column = column + direction.getColumn();
                 let offsetCoordinate = createCoordinate(row, column);
-                if (this.isOnInterval(offsetCoordinate)) {
+                if (this.include(offsetCoordinate)) {
                     coordinates.push(offsetCoordinate);
                 }
             }
             return coordinates;
         },
 
-        isOnInterval(coordinate){
+        include(coordinate){
             return coordinate.getRow() >= 0 && coordinate.getRow() < this.MAX_ROWS && coordinate.getColumn() >= 0 && coordinate.getColumn() < this.MAX_COLUMNS;
         },
 

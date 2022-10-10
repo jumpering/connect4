@@ -41,7 +41,7 @@ function createGameView(game) {
             if (game.isTied()) {
                 console.writeln(messageView().TIED_GAME);
             } else {
-                if (game.getCurrentColor() === colors().RED) {//esto en un array con una sola linea 0 o 1
+                if (game.getCurrentColor() === colors().RED) {
                     console.writeln(messageView().PLAYER + messageView().RED + messageView().WIN_GAME);
                 } else {
                     console.writeln(messageView().PLAYER + messageView().YELLOW + messageView().WIN_GAME);
@@ -115,21 +115,21 @@ function createBoardView(board) {
                     console.writeln(messageView().COLUMN_NOT_EMPTY);
                 }
             } while (!board.isOnValidRange(column) || board.isCompletedColumn(column - 1));
-            return new Coordinate(board.getFirstEmptyRow(column - 1), column - 1);
+            return createCoordinate(board.getFirstEmptyRow(column - 1), column - 1);
         }
     }
 }
 
 function createBoard() {
     return {
+        ON_LINE_LENGTH: 4,
         slots: [],
         EMPTY_SLOT: " ",
 
         reset() {
-            new Coordinate(); //¿porque si no hago este NEW no obtengo propiedades estáticas de la clase Coordinate?¿?¿
-            this.slots = new Array(Coordinate.MAX_ROWS);
-            for (let i = 0; i < Coordinate.MAX_ROWS; i++) {
-                this.slots[i] = new Array(Coordinate.MAX_COLUMNS).fill(this.EMPTY_SLOT);
+            this.slots = new Array(createCoordinate().MAX_ROWS);
+            for (let i = 0; i < createCoordinate().MAX_ROWS; i++) {
+                this.slots[i] = new Array(createCoordinate().MAX_COLUMNS).fill(this.EMPTY_SLOT);
             }
         },
 
@@ -143,25 +143,21 @@ function createBoard() {
 
         isWinner(coordinate) {
             let isWinner = false;
-            let currentColor = this.slots[coordinate.getRow()][coordinate.getColumn()];
-            let directions = [];
-            directions.push(new Direction("SOUTH", 1, 0));
-            directions.push(new Direction("EAST", 0, 1));
-            directions.push(new Direction("WEST", 0, -1));
-            directions.push(new Direction("NORTH_EAST", -1, 1));
-            directions.push(new Direction("SOUTH_WEST", 1, -1));
-            directions.push(new Direction("SOUTH_EAST", 1, 1));
-            directions.push(new Direction("NORTH_WEST", -1, -1));
-            directions.forEach(direction => {
-                let coordinates = coordinate.getOnLine(direction);
+            const currentColor = this.slots[coordinate.getRow()][coordinate.getColumn()];
+            this.getDirections().forEach(direction => {
+                let coordinatesOnLine = coordinate.getOnLine(direction, this.ON_LINE_LENGTH);
+                direction.reverse()
+                let reverseCoordinatesOnLine = coordinate.getOnLine(direction, this.ON_LINE_LENGTH);
+                reverseCoordinatesOnLine.reverse().pop();
+                coordinatesOnLine = reverseCoordinatesOnLine.concat(coordinatesOnLine);
                 let colorCounter = 0;
-                coordinates.forEach(coordinate => {
+                coordinatesOnLine.forEach(coordinate => {
                     if (this.slots[coordinate.getRow()][coordinate.getColumn()] === currentColor) {
                         colorCounter++;
                     } else {
                         colorCounter = 0;
                     }
-                    if (colorCounter === 4) {
+                    if (colorCounter === this.ON_LINE_LENGTH) {
                         isWinner = true;
                     }
                 });
@@ -169,16 +165,25 @@ function createBoard() {
             return isWinner;
         },
 
+        getDirections(){
+            let directions = [];
+            directions.push(createDirection("SOUTH", 1, 0));
+            directions.push(createDirection("EAST", 0, 1));
+            directions.push(createDirection("SOUTH_WEST", 1, -1));
+            directions.push(createDirection("SOUTH_EAST", 1, 1)); 
+            return directions;
+        },
+
         isTied() {
-            for (let i = 0; i < Coordinate.MAX_COLUMNS; i++) {
+            for (let i = 0; i < createCoordinate().MAX_COLUMNS; i++) {
                 if (this.slots[0][i] === " ") {
                     return false;
                 }
             }
             return true;
         },
-        getFirstEmptyRow(column) {//como assert columna no completa
-            for (let i = Coordinate.MAX_ROWS - 1; i >= 0; i--) {
+        getFirstEmptyRow(column) {
+            for (let i = createCoordinate().MAX_ROWS - 1; i >= 0; i--) {
                 if (this.slots[i][column] === " ") {
                     return i;
                 }
@@ -190,18 +195,18 @@ function createBoard() {
         },
 
         isOnValidRange(column) {
-            return 1 <= column && column <= Coordinate.MAX_COLUMNS;
+            return 1 <= column && column <= createCoordinate().MAX_COLUMNS;
         },
 
         getMaxColumns() {
-            return Coordinate.MAX_COLUMNS;
+            return createCoordinate().MAX_COLUMNS;
         },
     }
 }
 
 function createTurnView(turn) {
     return {
-        show() {//esto en un array con una sola linea 0 o 1
+        show() {
             if (turn.getCurrentColor() === colors().RED) {
                 console.write(messageView().TURN + messageView().RED);
             } else {
@@ -219,8 +224,8 @@ function createTurn() {
             return this.currentColor;
         },
 
-        change() {// usar indice
-            this.currentColor = this.currentColor === colors().RED ? colors().YELLOW : colors().RED; //tal vez solo con 0 y 1
+        change() {
+            this.currentColor = this.currentColor === colors().RED ? colors().YELLOW : colors().RED;
         }
     }
 }
@@ -232,46 +237,68 @@ function colors() {
     }
 }
 
-function Coordinate(row, column) {
-    Coordinate.MAX_ROWS = 6;
-    Coordinate.MAX_COLUMNS = 7;
-    this.row = row;
-    this.column = column;
+function createCoordinate(row, column) {
+    return{
+        MAX_ROWS: 6,
+        MAX_COLUMNS: 7,
+        row: row,
+        column: column,
 
-    Coordinate.prototype.getRow = function () {
-        return this.row;
-    }
-    Coordinate.prototype.getColumn = function () {
-        return this.column;
-    }
-
-    Coordinate.prototype.getOnLine = function (direction) {
-        this.LENGTH_ON_LINE = 4;
-        this.coordinates = [];
-        let row = this.row;
-        let column = this.column;
-        this.coordinates.push(new Coordinate(this.row, this.column));
-        for (let i = 0; i < this.LENGTH_ON_LINE; i++) {
-            row = row + direction.getRow();
-            column = column + direction.getColumn();
-            if (row >= 0 && row < 6 && column >= 0 && column < 7) {
-                this.coordinates.push(new Coordinate(row, column));
+        getOnLine(direction, onLineLength){
+            let coordinates = [];
+            let row = this.row;
+            let column = this.column;
+            coordinates.push(this);
+            for (let i = 0; i < onLineLength; i++) {
+                row = row + direction.getRow();
+                column = column + direction.getColumn();
+                let offsetCoordinate = createCoordinate(row, column);
+                if (this.isOnInterval(offsetCoordinate)) {
+                    coordinates.push(offsetCoordinate);
+                }
             }
+            return coordinates;
+        },
+
+        isOnInterval(coordinate){
+            return coordinate.getRow() >= 0 && coordinate.getRow() < this.MAX_ROWS && coordinate.getColumn() >= 0 && coordinate.getColumn() < this.MAX_COLUMNS;
+        },
+
+        getRow(){
+            return this.row;
+        },
+
+        getColumn(){
+            return this.column;
+        },
+
+        setRow(row){
+            this.row = row;
+        },
+
+        setColumn(column){
+            this.column = column;
         }
-        return this.coordinates;
     }
 }
 
-function Direction(name, row, column) {
-    this.coordinate = new Coordinate(row, column);
-    this.name = name;
+function createDirection(name, row, column) {
+    return {
+        coordinate: createCoordinate(row, column),
+        name: name,
 
-    Direction.prototype.getRow = function () {
-        return this.coordinate.getRow();
-    }
+        getRow() {
+            return this.coordinate.getRow();
+        },
 
-    Direction.prototype.getColumn = function () {
-        return this.coordinate.getColumn();
+        getColumn() {
+            return this.coordinate.getColumn();
+        },
+
+        reverse() {
+            this.coordinate.setRow(this.coordinate.getRow() * -1);
+            this.coordinate.setColumn(this.coordinate.getColumn() * -1);
+        }
     }
 }
 

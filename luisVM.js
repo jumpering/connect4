@@ -349,7 +349,6 @@ class PlayerView {
         let color = player.getColor();
         let colorView = new ColorView(color);
         colorView.write();
-        //column = player.getColumn(); //omitido para probar el doble despacho
         player.visit(this);
         player.dropToken(this.column);
     }
@@ -392,8 +391,6 @@ class Player {
         this.#board = board;
     }
 
-    //getColumn() { }
-
     visit(playerView) { }
 
     isComplete(column) {
@@ -417,26 +414,6 @@ class HumanPlayer extends Player {
     constructor(color, board) {
         super(color, board);
     }
-
-    // getColumn() {
-    //     let column;
-    //     let valid;
-
-    //     do {
-    //         column = console.readNumber(Message.ENTER_COLUMN_TO_DROP.toString()) - 1;//ojo esto es vista
-    //         valid = Coordinate.isColumnValid(column);
-    //         if (!valid) {
-    //             Message.INVALID_COLUMN.writeln();//ojo esto es vista
-    //         } else {
-    //             valid = !this.isComplete(column);
-
-    //             if (!valid) {
-    //                 Message.COMPLETED_COLUMN.writeln(); //ojo esto es vista
-    //             }
-    //         }
-    //     } while (!valid);
-    //     return column;
-    // }
 
     isColumnValid(column) {
         this.#validCode = 0;

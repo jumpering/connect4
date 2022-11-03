@@ -342,14 +342,37 @@ class Board {
 
 class PlayerView {
 
+    #column;
+
     play(player) {
-        let column;
         Message.TURN.write();
         let color = player.getColor();
         let colorView = new ColorView(color);
         colorView.write();
-        column = player.getColumn();
-        player.dropToken(column);
+        //column = player.getColumn(); //omitido para probar el doble despacho
+        player.visit(this);
+        player.dropToken(this.column);
+    }
+
+    playWithRadom(randomPlayer) {
+        this.column = randomPlayer.getColumn();
+    }
+
+    playWithHuman(humanPlayer) {
+        let valid;
+        do {
+            this.column = console.readNumber(Message.ENTER_COLUMN_TO_DROP.toString()) - 1;
+            valid = humanPlayer.isColumnValid(this.column);
+            switch (humanPlayer.getValidColumnCode()) {
+                case 1:
+                    Message.INVALID_COLUMN.writeln();
+                    break;
+
+                case 2:
+                    Message.COMPLETED_COLUMN.writeln();
+                    break;
+            }
+        } while (!humanPlayer.isColumnValid(this.column));
     }
 
     writeResult() {
@@ -371,6 +394,8 @@ class Player {
 
     getColumn() { }
 
+    visit(playerView) { }
+
     isComplete(column) {
         return this.#board.isComplete(column);
     }
@@ -387,27 +412,57 @@ class Player {
 
 class HumanPlayer extends Player {
 
+    #validCode;
+
     constructor(color, board) {
         super(color, board);
     }
 
-    getColumn() {
-        let column;
-        let valid;
-        do {
-            column = console.readNumber(Message.ENTER_COLUMN_TO_DROP.toString()) - 1;
-            valid = Coordinate.isColumnValid(column);
-            if (!valid) {
-                Message.INVALID_COLUMN.writeln();
-            } else {
-                valid = !this.isComplete(column);
+    // getColumn() {
+    //     let column;
+    //     let valid;
 
-                if (!valid) {
-                    Message.COMPLETED_COLUMN.writeln();
-                }
+    //     do {
+    //         column = console.readNumber(Message.ENTER_COLUMN_TO_DROP.toString()) - 1;//ojo esto es vista
+    //         valid = Coordinate.isColumnValid(column);
+    //         if (!valid) {
+    //             Message.INVALID_COLUMN.writeln();//ojo esto es vista
+    //         } else {
+    //             valid = !this.isComplete(column);
+
+    //             if (!valid) {
+    //                 Message.COMPLETED_COLUMN.writeln(); //ojo esto es vista
+    //             }
+    //         }
+    //     } while (!valid);
+    //     return column;
+    // }
+
+    isColumnValid(column) {
+        this.#validCode = 0;
+        let valid = Coordinate.isColumnValid(column);
+        if (!valid) {
+            this.#validCode = 1;
+            return false;
+        } else {
+            valid = !this.isComplete(column);
+            if (!valid) {
+                this.#validCode = 2;
+                return false;
             }
-        } while (!valid);
-        return column;
+        }
+        return true;
+    }
+
+
+
+    getValidColumnCode() {
+        return this.#validCode;
+
+    }
+
+    visit(playerView) { //ojo ciclo, y modelo conoce a vista
+        playerView.playWithHuman(this);
     }
 
 }
@@ -420,6 +475,10 @@ class RandomPlayer extends Player {
 
     getColumn() {
         return Math.floor(Math.random() * 7);
+    }
+
+    visit(playerView) { //ojo ciclo, y modelo conoce a vista
+        playerView.playWithRadom(this);
     }
 
 }

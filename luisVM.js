@@ -392,7 +392,7 @@ class Player {
         this.#board = board;
     }
 
-    getColumn() { }
+    //getColumn() { }
 
     visit(playerView) { }
 

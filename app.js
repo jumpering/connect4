@@ -1,351 +1,623 @@
 const { Console } = require("console-mpds");
 const console = new Console();
 
-connect4().play();
+class ClosedInterval {
 
-function connect4() {
-    const gameView = createGameView(createGame());
-    return {
-        play() {
-            yesNoDialogView = createYesNoDialogView();
-            do {
-                gameView.playOneRound();
-                yesNoDialogView.read(messageView().PLAY_AGAIN);
-            } while (yesNoDialogView.isAffirmative());
-        }
+    #min;
+    #max;
+
+    constructor(min, max) {
+        this.#min = min;
+        this.#max = max;
     }
-}
 
-function createGameView(game) {
-    const boardView = createBoardView(game.getBoard());
-    const turnView = createTurnView(game.getTurn());
-    return {
-        playOneRound() {
-            game.reset();
-            console.writeln(messageView().TITLE);
-            let coordinate;
-            do {
-                boardView.show();
-                turnView.show();
-                coordinate = boardView.readCoordinate();
-                game.putToken(coordinate);
-                if (!game.isFinished(coordinate)) {
-                    game.changeTurn();
-                }
-            } while (!game.isFinished(coordinate));
-            boardView.show();
-            this.showResult();
-        },
-
-        showResult() {
-            if (game.isTied()) {
-                console.writeln(messageView().TIED_GAME);
-            } else {
-                if (game.getCurrentColor() === colors().RED) {
-                    console.writeln(messageView().PLAYER + messageView().RED + messageView().WIN_GAME);
-                } else {
-                    console.writeln(messageView().PLAYER + messageView().YELLOW + messageView().WIN_GAME);
-                }
-            }
-        },
+    isIncluded(value) {
+        return this.#min <= value && value <= this.#max;
     }
-}
 
-function createGame() {
-    const board = createBoard();
-    const turn = createTurn();
-    return {
-        reset() {
-            board.reset();
-        },
-
-        putToken(coordinate) {
-            board.putToken(coordinate, this.getCurrentColor());
-        },
-
-        getCurrentColor() {
-            return turn.getCurrentColor();
-        },
-
-        changeTurn() {
-            turn.change();
-        },
-
-        isTied() {
-            return board.isTied();
-        },
-
-        getBoard() {
-            return board;
-        },
-
-        getTurn() {
-            return turn;
-        },
-        isFinished(coordinate) {
-            return board.isFinished(coordinate);
-        }
+    toString() {
+        return `[` + this.#min + `, ` + this.#max + `]`;
     }
-}
 
-function createBoardView(board) {
-    return {
-        show() {
-            console.writeln(messageView().BOARD_HEADER);
-            for (let i = 0; i < board.slots.length; i++) {
-                for (let j = 0; j < board.slots[i].length; j++) {
-                    if (board.slots[i][j] === " ") {
-                        console.write(messageView().BOARD_HOLE);
-                    }
-                    else {
-                        console.write(board.slots[i][j] === colors().RED ? messageView().BOARD_RED : messageView().BOARD_YELLOW);
-                    }
-                }
-                console.writeln();
-            }
-        },
-
-        readCoordinate() {
-            let column;
-            do {
-                column = console.readNumber(messageView().INSERT_COLUMN);
-                if (!board.isOnValidRange(column)) {
-                    console.writeln(messageView().INSERT_VALUES_BETWEEN + board.getMaxColumns());
-                } else if (board.isCompletedColumn(column - 1)) {
-                    console.writeln(messageView().COLUMN_NOT_EMPTY);
-                }
-            } while (!board.isOnValidRange(column) || board.isCompletedColumn(column - 1));
-            return createCoordinate(board.getFirstEmptyRow(column - 1), column - 1);
-        }
-    }
-}
-
-function createBoard() {
-    return {
-        ON_LINE_LENGTH: 4,
-        slots: [],
-        EMPTY_SLOT: " ",
-
-        reset() {
-            this.slots = new Array(createCoordinate().MAX_ROWS);
-            for (let i = 0; i < createCoordinate().MAX_ROWS; i++) {
-                this.slots[i] = new Array(createCoordinate().MAX_COLUMNS).fill(this.EMPTY_SLOT);
-            }
-        },
-
-        isFinished(coordinate) {
-            return this.isWinner(coordinate) || this.isTied();
-        },
-
-        putToken(coordinate, color) {
-            this.slots[coordinate.getRow()][coordinate.getColumn()] = color;
-        },
-
-        isWinner(coordinate) {
-            let isWinner = false;
-            const currentColor = this.slots[coordinate.getRow()][coordinate.getColumn()];
-            this.getDirections().forEach(direction => {
-                let coordinatesOnLine = coordinate.getOnLine(direction, this.ON_LINE_LENGTH);
-                direction.reverse()
-                let reverseCoordinatesOnLine = coordinate.getOnLine(direction, this.ON_LINE_LENGTH);
-                reverseCoordinatesOnLine.reverse().pop();
-                coordinatesOnLine = reverseCoordinatesOnLine.concat(coordinatesOnLine);
-                let colorCounter = 0;
-                coordinatesOnLine.forEach(coordinate => {
-                    if (this.slots[coordinate.getRow()][coordinate.getColumn()] === currentColor) {
-                        colorCounter++;
-                    } else {
-                        colorCounter = 0;
-                    }
-                    if (colorCounter === this.ON_LINE_LENGTH) {
-                        isWinner = true;
-                    }
-                });
-            });
-            return isWinner;
-        },
-
-        getDirections(){
-            let directions = [];
-            directions.push(createDirection("SOUTH", 1, 0));
-            directions.push(createDirection("EAST", 0, 1));
-            directions.push(createDirection("SOUTH_WEST", 1, -1));
-            directions.push(createDirection("SOUTH_EAST", 1, 1)); 
-            return directions;
-        },
-
-        isTied() {
-            for (let i = 0; i < createCoordinate().MAX_COLUMNS; i++) {
-                if (this.slots[0][i] === " ") {
-                    return false;
-                }
-            }
+    equals(closedInterval) {
+        if (this === closedInterval)
             return true;
-        },
-        getFirstEmptyRow(column) {
-            for (let i = createCoordinate().MAX_ROWS - 1; i >= 0; i--) {
-                if (this.slots[i][column] === " ") {
-                    return i;
+        if (closedInterval === null)
+            return false;
+        return this.#min === closedInterval.#min && this.#max === closedInterval.#max
+    }
+
+}
+
+class ColorView {
+
+    #color;
+
+    constructor(color) {
+        this.#color = color;
+    }
+
+    write() {
+        let color = this.#color.toString();
+        console.write(color[0]);
+    }
+}
+
+class Color {
+
+    static RED = new Color(`Red`);
+    static YELLOW = new Color(`Yellow`);
+    static NULL = new Color(` `);
+    #string;
+
+    constructor(string) {
+        this.#string = string;
+    }
+
+    static get(ordinal) {
+        return Color.values()[ordinal];
+    }
+
+    static values() {
+        return [Color.RED, Color.YELLOW, Color.NULL];
+    }
+
+    isNull() {
+        return this === Color.NULL;
+    }
+
+    toString() {
+        return this.#string;
+    }
+
+}
+
+class Coordinate {
+
+    static ORIGIN = new Coordinate(0, 0);
+    static NUMBER_ROWS = 6;
+    static #ROWS = new ClosedInterval(0, Coordinate.NUMBER_ROWS - 1);
+    static NUMBER_COLUMNS = 7;
+    static #COLUMNS = new ClosedInterval(0, Coordinate.NUMBER_COLUMNS - 1);
+
+    #row;
+    #column;
+
+    constructor(row, column) {
+        this.#row = row;
+        this.#column = column;
+    }
+
+    shifted(coordinate) {
+        return new Coordinate(this.#row + coordinate.#row,
+            this.#column + coordinate.#column);
+    }
+
+    isValid() {
+        return Coordinate.#isRowValid(this.getRow())
+            && Coordinate.isColumnValid(this.getColumn());
+    }
+
+    static isColumnValid(column) {
+        return Coordinate.#COLUMNS.isIncluded(column);
+    }
+
+    static #isRowValid(row) {
+        return Coordinate.#ROWS.isIncluded(row);
+    }
+
+    getRow() {
+        return this.#row;
+    }
+
+    getColumn() {
+        return this.#column;
+    }
+
+    equals(coordinate) {
+        if (this == coordinate)
+            return true;
+        if (coordinate == null)
+            return false;
+        return this.#column === coordinate.#column && this.#row === coordinate.#row;
+    }
+
+    toString() {
+        return `Coordinate [row= ${this.#row} column= ${this.#column}]`;
+    }
+
+}
+
+class Direction {
+    static NORTH = new Direction(1, 0);
+    static NORTH_EAST = new Direction(1, 1);
+    static EAST = new Direction(0, 1);
+    static SOUTH_EAST = new Direction(-1, 1);
+    static SOUTH = new Direction(-1, 0);
+    static SOUTH_WEST = new Direction(-1, -1);
+    static WEST = new Direction(0, -1);
+    static NORTH_WEST = new Direction(1, -1);
+
+    #coordinate;
+
+    constructor(row, column) {
+        this.#coordinate = new Coordinate(row, column);
+    }
+
+    getOpposite() {
+        for (let direction of Direction.values()) {
+            if (direction.#coordinate.shifted(this.#coordinate).equals(Coordinate.ORIGIN)) {
+                return direction;
+            }
+        }
+        return null;
+    }
+
+    static values() {
+        return [Direction.NORTH, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST,
+        Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST];
+    }
+
+    getCoordinate() {
+        return this.#coordinate;
+    }
+
+}
+
+class Message {
+    static TITLE = new Message(`--- CONNECT 4 ---`);
+    static HORIZONTAL_LINE = new Message(`-`);
+    static VERTICAL_LINE = new Message(`|`);
+    static TURN = new Message(`Turn: `);
+    static ENTER_COLUMN_TO_DROP = new Message(`Enter a column to drop a token: `);
+    static INVALID_COLUMN = new Message(`Invalid columnn!!! Values [1-7]`);
+    static COMPLETED_COLUMN = new Message(`Invalid column!!! It's completed`);
+    static PLAYER_WIN = new Message(`#colorS WIN!!! : -)`);
+    static PLAYERS_TIED = new Message(`TIED!!!`);
+    static RESUME = new Message(`Do you want to continue`);
+
+    #string;
+
+    constructor(string) {
+        this.#string = string;
+    }
+
+    write() {
+        console.write(this.#string);
+    }
+
+    writeln() {
+        console.writeln(this.#string);
+    }
+
+    toString() {
+        return this.#string;
+    }
+
+}
+
+class BoardView {
+
+    #board;
+    #colorView;
+
+    constructor(board) {
+        this.#board = board;
+        Message.TITLE.writeln();
+    }
+
+    writeln() {
+        this.writeHorizontal();
+        for (let i = Coordinate.NUMBER_ROWS - 1; i >= 0; i--) {
+            Message.VERTICAL_LINE.write();
+            for (let j = 0; j < Coordinate.NUMBER_COLUMNS; j++) {
+                let colorView = new ColorView(this.#board.getColor(new Coordinate(i, j)));
+                colorView.write();
+
+                Message.VERTICAL_LINE.write();
+            }
+            console.writeln();
+        }
+        this.writeHorizontal();
+    }
+
+    writeHorizontal() {
+        for (let i = 0; i < 4 * Coordinate.NUMBER_COLUMNS; i++) {
+            Message.HORIZONTAL_LINE.write();
+        }
+        Message.HORIZONTAL_LINE.writeln();
+    }
+
+}
+
+class Board {
+
+    #colors;
+    #lastDrop;
+
+    constructor() {
+        this.#colors = [];
+        for (let i = 0; i < Coordinate.NUMBER_ROWS; i++) {
+            this.#colors[i] = [];
+        }
+        this.reset();
+    }
+
+    reset() {
+        for (let i = 0; i < Coordinate.NUMBER_ROWS; i++) {
+            for (let j = 0; j < Coordinate.NUMBER_COLUMNS; j++) {
+                this.#colors[i][j] = Color.NULL;
+            }
+        }
+    }
+
+    dropToken(column, color) {
+        this.#lastDrop = new Coordinate(0, column);
+        while (!this.isEmpty(this.#lastDrop)) {
+            this.#lastDrop = this.#lastDrop.shifted(Direction.NORTH.getCoordinate());
+        }
+        this.#colors[this.#lastDrop.getRow()][this.#lastDrop.getColumn()] = color;
+    }
+
+    isComplete(column) {
+        if (column !== undefined) {
+            return !this.isEmpty(new Coordinate(Coordinate.NUMBER_ROWS - 1, column));
+        }
+        for (let i = 0; i < Coordinate.NUMBER_COLUMNS; i++) {
+            if (!this.isComplete(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    isFinished() {
+        return this.isComplete() || this.isWinner();
+    }
+
+    isWinner() {
+        if (this.#lastDrop === undefined) {
+            return false;
+        }
+        for (let direction of [Direction.NORTH, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST]) {
+            let coordinates = this.getCoordinates(direction);
+            if (this.isConnect4(coordinates)) {
+                return true;
+            }
+            for (let i = 0; i < 4 - 1; i++) {
+                coordinates = this.getShifted(coordinates, direction.getOpposite());
+                if (this.isConnect4(coordinates)) {
+                    return true;
                 }
             }
-        },
-
-        isCompletedColumn(column) {
-            return this.slots[0][column] !== " ";
-        },
-
-        isOnValidRange(column) {
-            return 1 <= column && column <= createCoordinate().MAX_COLUMNS;
-        },
-
-        getMaxColumns() {
-            return createCoordinate().MAX_COLUMNS;
-        },
+        }
+        return false;
     }
-}
 
-function createTurnView(turn) {
-    return {
-        show() {
-            if (turn.getCurrentColor() === colors().RED) {
-                console.write(messageView().TURN + messageView().RED);
-            } else {
-                console.write(messageView().TURN + messageView().YELLOW);
+    getCoordinates(direction) {
+        let coordinates = [];
+        coordinates[0] = this.#lastDrop;
+        for (let i = 1; i < 4; i++) {
+            coordinates[i] = coordinates[i - 1].shifted(direction.getCoordinate());
+        }
+        return coordinates;
+    }
+
+    isConnect4(coordinates) {
+        if (!coordinates[0].isValid()) {
+            return false;
+        }
+        for (let i = 1; i < coordinates.length; i++) {
+            if (!coordinates[i].isValid()) {
+                return false;
+            }
+            if (this.getColor(coordinates[i - 1]) != this.getColor(coordinates[i])) {
+                return false;
             }
         }
+        return true;
     }
-}
 
-function createTurn() {
-    return {
-        currentColor: colors().RED,
-
-        getCurrentColor() {
-            return this.currentColor;
-        },
-
-        change() {
-            this.currentColor = this.currentColor === colors().RED ? colors().YELLOW : colors().RED;
+    getShifted(coordinates, direction) {
+        let shiftedCoordinates = [];
+        for (let i = 0; i < coordinates.length; i++) {
+            shiftedCoordinates[i] = coordinates[i].shifted(direction.getCoordinate());
         }
+        return shiftedCoordinates;
     }
+
+    isOccupied(coordinate, color) {
+        return this.getColor(coordinate) == color;
+    }
+
+    isEmpty(coordinate) {
+        return this.isOccupied(coordinate, Color.NULL);
+    }
+
+    getColor(coordinate) {
+        return this.#colors[coordinate.getRow()][coordinate.getColumn()];
+    }
+
 }
 
-function colors() {
-    return {
-        RED: "R",
-        YELLOW: "Y"
+class PlayerView {
+
+    #column;
+
+    play(player) {
+        Message.TURN.write();
+        let color = player.getColor();
+        let colorView = new ColorView(color);
+        colorView.write();
+        player.visit(this);
+        player.dropToken(this.column);
     }
-}
 
-function createCoordinate(row, column) {
-    return{
-        MAX_ROWS: 6,
-        MAX_COLUMNS: 7,
-        row: row,
-        column: column,
+    playWithRadom(randomPlayer) {
+        this.column = randomPlayer.getColumn();
+    }
 
-        getOnLine(direction, onLineLength){
-            let coordinates = [];
-            let row = this.row;
-            let column = this.column;
-            coordinates.push(this);
-            for (let i = 0; i < onLineLength; i++) {
-                row = row + direction.getRow();
-                column = column + direction.getColumn();
-                let offsetCoordinate = createCoordinate(row, column);
-                if (this.isIncluded(offsetCoordinate)) {
-                    coordinates.push(offsetCoordinate);
-                }
+    playWithHuman(humanPlayer) {
+        let valid;
+        do {
+            this.column = console.readNumber(Message.ENTER_COLUMN_TO_DROP.toString()) - 1;
+            valid = humanPlayer.isColumnValid(this.column);
+            switch (humanPlayer.getValidColumnCode()) {
+                case 1:
+                    Message.INVALID_COLUMN.writeln();
+                    break;
+
+                case 2:
+                    Message.COMPLETED_COLUMN.writeln();
+                    break;
             }
-            return coordinates;
-        },
+        } while (!humanPlayer.isColumnValid(this.column));
+    }
 
-        isIncluded(coordinate){
-            return coordinate.getRow() >= 0 && coordinate.getRow() < this.MAX_ROWS && coordinate.getColumn() >= 0 && coordinate.getColumn() < this.MAX_COLUMNS;
-        },
+    writeResult() {
+        let message = Message.PLAYER_WIN.toString();
+        console.writeln(message);
+    }
 
-        getRow(){
-            return this.row;
-        },
+}
 
-        getColumn(){
-            return this.column;
-        },
+class Player {
 
-        setRow(row){
-            this.row = row;
-        },
+    #color;
+    #board;
 
-        setColumn(column){
-            this.column = column;
+    constructor(color, board) {
+        this.#color = color;
+        this.#board = board;
+    }
+
+    visit(playerView) { }
+
+    isComplete(column) {
+        return this.#board.isComplete(column);
+    }
+
+    dropToken(column) {
+        this.#board.dropToken(column, this.#color);
+    }
+
+    getColor() {
+        return this.#color;
+    }
+
+}
+
+class HumanPlayer extends Player {
+
+    #validCode;
+
+    constructor(color, board) {
+        super(color, board);
+    }
+
+    isColumnValid(column) {//hace dos cosas, retorna y cambia estado (atributo)
+        let valid = Coordinate.isColumnValid(column);
+        if (!valid) {
+            this.#validCode = 1;
+            return false;
+        } else {
+            valid = !this.isComplete(column);
+            if (!valid) {
+                this.#validCode = 2;
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+    getValidColumnCode() {
+        return this.#validCode;
+
+    }
+
+    visit(playerView) { //ojo ciclo, y modelo conoce a vista
+        playerView.playWithHuman(this);
+    }
+
+}
+
+class RandomPlayer extends Player {
+
+    constructor(color, board) {
+        super(color, board);
+    }
+
+    getColumn() {
+        return Math.floor(Math.random() * 7);
+    }
+
+    visit(playerView) { //ojo ciclo, y modelo conoce a vista
+        playerView.playWithRadom(this);
+    }
+
+}
+
+class TurnView {
+
+    #playerView;
+    #turn;
+
+    constructor(turn) {
+        this.#playerView = new PlayerView();
+        this.#turn = turn;
+    }
+
+    setPlayerConfig() {
+        let playerConfigOption = console.readNumber("1 - human vs random \n2 - human vs human \n Insert game mode: ");
+        this.#turn.reset(playerConfigOption);
+
+    }
+
+    play() {
+        this.#playerView.play(this.#turn.getPlayer());
+        this.#turn.next();
+    }
+
+    writeResult() {
+        if (this.#turn.isWinner()) {
+            let message = Message.PLAYER_WIN.toString();
+            message = message.replace(`#color`, this.#turn.getColor().toString());
+            console.writeln(message);
+        } else {
+            Message.PLAYERS_TIED.write();
         }
     }
+
 }
 
-function createDirection(name, row, column) {
-    return {
-        coordinate: createCoordinate(row, column),
-        name: name,
+class Turn {
 
-        getRow() {
-            return this.coordinate.getRow();
-        },
+    static #NUMBER_PLAYERS = 2;
+    #players;
+    #activePlayer;
+    #board;
 
-        getColumn() {
-            return this.coordinate.getColumn();
-        },
+    constructor(board) {
+        this.#board = board;
+        this.#players = [];
+    }
 
-        reverse() {
-            this.coordinate.setRow(this.coordinate.getRow() * -1);
-            this.coordinate.setColumn(this.coordinate.getColumn() * -1);
+    reset(playerConfig) {
+        if (playerConfig === 1) {
+            this.#players[0] = new HumanPlayer(Color.get(0), this.#board);
+            this.#players[1] = new RandomPlayer(Color.get(1), this.#board);
         }
-    }
-}
 
-function createYesNoDialogView() {
-    return {
-        YES: messageView().YES,
-        NO: messageView().NO,
-        response: "",
-        error: true,
-
-        read(message) {
-            do {
-                this.response = console.readString(message);
-                this.error = this.response != this.YES && this.response != this.NO;
-                if (this.error) {
-                    console.writeln(messageView().RESPONSE_MUST_BE + this.YES + messageView().OR + this.NO);
-                }
-            } while (this.error);
-            return this.response;
-        },
-
-        isAffirmative() {
-            return this.response === this.YES;
+        if (playerConfig === 2) {
+            for (let i = 0; i < Turn.#NUMBER_PLAYERS; i++) {
+                this.#players[i] = new HumanPlayer(Color.get(i), this.#board);
+            }
         }
+        this.#activePlayer = 0;
+    }
+
+    next() {
+        if (!this.#board.isFinished()) {
+            this.#activePlayer = (this.#activePlayer + 1) % Turn.#NUMBER_PLAYERS;
+        }
+
+    }
+
+    getPlayer() {
+        return this.#players[this.#activePlayer];
+    }
+
+    writeResult() {
+        this.#players[this.#activePlayer].writeResult();
+    }
+
+    isWinner() {
+        return this.#board.isWinner();
+    }
+
+    getColor() {
+        return this.#players[this.#activePlayer].getColor();
+    }
+
+}
+
+class YesNoDialog {
+
+    static #AFFIRMATIVE = `y`;
+    static #NEGATIVE = `n`;
+    static #SUFFIX = `? (` +
+        YesNoDialog.#AFFIRMATIVE + `/` +
+        YesNoDialog.#NEGATIVE + `): `;
+    static #MESSAGE = `The value must be ${YesNoDialog.#AFFIRMATIVE} or ${YesNoDialog.#NEGATIVE}`;
+    #answer;
+
+    read(message) {
+        let ok;
+        do {
+            console.write(message);
+            this.#answer = console.readString(YesNoDialog.#SUFFIX);
+            ok = this.isAffirmative() || this.isNegative();
+            if (!ok) {
+                console.writeln(YesNoDialog.#MESSAGE);
+            }
+        } while (!ok);
+    }
+
+    isAffirmative() {
+        return this.getAnswer() === YesNoDialog.#AFFIRMATIVE;
+    }
+
+    isNegative() {
+        return this.getAnswer() === YesNoDialog.#NEGATIVE;
+    }
+
+    getAnswer() {
+        return this.#answer.toLowerCase()[0];
     }
 }
 
-function messageView() {
-    return {
-        TITLE: "\n      Connect4\n",
-        TURN: "\nTurn ",
-        COLUMN_NOT_EMPTY: "This column has not empty holes, select another column",
-        INSERT_COLUMN: " please insert column: ",
-        TIED_GAME: "Tied game",
-        PLAYER: "Player ",
-        WIN_GAME: " win!",
-        BOARD_HEADER: "\n 1  2  3  4  5  6  7\n -------------------",
-        BOARD_HOLE: " · ",
-        BOARD_RED: " R ",
-        BOARD_YELLOW: " Y ",
-        INSERT_VALUES_BETWEEN: "Insert value between 1 and ",
-        PLAY_AGAIN: "Play again? (yes/no)",
-        YES: "yes",
-        NO: "no",
-        RESPONSE_MUST_BE: "Response must be ",
-        OR: " or ",
-        RED: "Red",
-        YELLOW: "Yellow"
+class Connect4 {
+
+    #boardView;
+    #turnView;
+    #board;
+    #turn;
+
+    constructor() {
+        this.#board = new Board();
+        this.#turn = new Turn(this.#board);
+        this.#boardView = new BoardView(this.#board);
+        this.#turnView = new TurnView(this.#turn);
     }
+
+    playGames() {
+        do {
+            this.playGame();
+        } while (this.isResumed());
+    }
+
+    playGame() {
+        this.#turnView.setPlayerConfig();
+        this.#boardView.writeln();
+        do {
+            this.#turnView.play();
+            this.#boardView.writeln();
+        } while (!this.#board.isFinished());
+        this.#turnView.writeResult();
+    }
+
+    isResumed() {
+        let yesNoDialog = new YesNoDialog();
+        yesNoDialog.read(Message.RESUME.toString());
+        if (yesNoDialog.isAffirmative()) {
+            this.#board.reset();
+            this.#turn.reset();
+        }
+        return yesNoDialog.isAffirmative();
+    }
+
 }
+
+new Connect4().playGames();

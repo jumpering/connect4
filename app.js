@@ -349,15 +349,15 @@ class PlayerView {
         let color = player.getColor();
         let colorView = new ColorView(color);
         colorView.write();
-        player.visit(this);
+        player.accept(this);
         player.dropToken(this.column);
     }
 
-    playWithRadom(randomPlayer) {
+    visitRadomPlayer(randomPlayer) {
         this.column = randomPlayer.getColumn();
     }
 
-    playWithHuman(humanPlayer) {
+    visitHumanPlayer(humanPlayer) {
         let valid;
         do {
             this.column = console.readNumber(Message.ENTER_COLUMN_TO_DROP.toString()) - 1;
@@ -391,7 +391,7 @@ class Player {
         this.#board = board;
     }
 
-    visit(playerView) { }
+    accept(visitor) { }
 
     isComplete(column) {
         return this.#board.isComplete(column);
@@ -437,8 +437,8 @@ class HumanPlayer extends Player {
 
     }
 
-    visit(playerView) { //ojo ciclo, y modelo conoce a vista
-        playerView.playWithHuman(this);
+    accept(visitor) { //ojo ciclo, y modelo conoce a vista
+        visitor.visitHumanPlayer(this);
     }
 
 }
@@ -453,8 +453,8 @@ class RandomPlayer extends Player {
         return Math.floor(Math.random() * 7);
     }
 
-    visit(playerView) { //ojo ciclo, y modelo conoce a vista
-        playerView.playWithRadom(this);
+    accept(visitor) { //ojo ciclo, y modelo conoce a vista
+        visitor.visitRadomPlayer(this);
     }
 
 }

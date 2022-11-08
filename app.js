@@ -362,7 +362,7 @@ class PlayerView {
         do {
             this.column = console.readNumber(Message.ENTER_COLUMN_TO_DROP.toString()) - 1;
             valid = humanPlayer.isColumnValid(this.column);
-            switch (humanPlayer.getValidColumnCode()) {
+            switch (humanPlayer.getValidColumnCode()) { //mejor un indice
                 case 1:
                     Message.INVALID_COLUMN.writeln();
                     break;
@@ -505,7 +505,7 @@ class Turn {
     }
 
     reset(playerConfig) {
-        if (playerConfig === 1) {
+        if (playerConfig === 1) {//codigo repetido
             this.#players[0] = new HumanPlayer(Color.get(0), this.#board);
             this.#players[1] = new RandomPlayer(Color.get(1), this.#board);
         }
